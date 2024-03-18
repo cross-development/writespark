@@ -12,8 +12,8 @@ import { CommentService } from './services/comment.service';
 import { AccountService } from './services/account.service';
 import { LoggerService } from './services/logger.service';
 import { ConfigService } from './services/config.service';
-// Database
-import { PrismaService } from './database/prisma.service';
+// Persistence
+import { PrismaService } from './persistence/prisma.service';
 // Controllers
 import { UserController } from './controllers/user.controller';
 import { PostController } from './controllers/post.controller';
@@ -50,7 +50,7 @@ import { IAccountController } from './controllers/abstractions/account.controlle
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	// Application
 	bind<App>(TYPES.Application).to(App).inSingletonScope();
-	// Database
+	// Persistence
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 	// Common
 	bind<ILoggerService>(TYPES.ILoggerService).to(LoggerService).inSingletonScope();

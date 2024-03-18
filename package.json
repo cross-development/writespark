@@ -11,8 +11,12 @@
 		"lint": "eslint ./src/**",
 		"lint:fix": "eslint ./src/** --fix",
 		"generate": "prisma generate",
-		"seed": "ts-node prisma/seed.ts",
+		"seed": "prisma db seed",
 		"debug": "nodemon -e ts,json --exec node --inspect=localhost:9222 -r ts-node/register src/main.ts"
+	},
+	"prisma": {
+		"schema": "./src/persistence/schema.prisma",
+		"seed": "ts-node --transpile-only ./src/persistence/seed.ts"
 	},
 	"keywords": [],
 	"author": "Vitalii Derda",

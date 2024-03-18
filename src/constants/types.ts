@@ -2,7 +2,7 @@
 export const TYPES = {
 	// App
 	Application: Symbol.for('Application'),
-	// Database
+	// Persistence
 	PrismaService: Symbol.for('PrismaService'),
 	// Common usage
 	ILoggerService: Symbol.for('LoggerService'),

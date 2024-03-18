@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 abstract class Seed {
 	public static async generate(): Promise<void> {
-		const alice = await prisma.user.upsert({
+		const alice = await prisma.userModel.upsert({
 			where: { email: 'alice@prisma.io' },
 			update: {},
 			create: {
@@ -33,7 +33,7 @@ abstract class Seed {
 			},
 		});
 
-		const bob = await prisma.user.upsert({
+		const bob = await prisma.userModel.upsert({
 			where: { email: 'bob@prisma.io' },
 			update: {},
 			create: {
@@ -46,7 +46,12 @@ abstract class Seed {
 							title: 'Follow Prisma on Twitter',
 							content: 'https://twitter.com/prisma',
 							comments: {
-								create: [],
+								create: [
+									{
+										body: 'Hello from Alice',
+										authorId: alice.id,
+									},
+								],
 							},
 						},
 						{

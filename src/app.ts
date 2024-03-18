@@ -12,8 +12,8 @@ import { CommentController } from './controllers/comment.controller';
 import { AccountController } from './controllers/account.controller';
 // Middleware
 import { AuthMiddleware } from './middleware/auth.middleware';
-// Database
-import { PrismaService } from './database/prisma.service';
+// Persistence
+import { PrismaService } from './persistence/prisma.service';
 // Constants
 import { TYPES } from './constants/types';
 // Types
