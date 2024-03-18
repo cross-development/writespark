@@ -5,8 +5,8 @@ import * as bodyParser from 'body-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 // Controllers
-import { UserController } from './controllers/user.controller';
 import { PostController } from './controllers/post.controller';
 import { CommentController } from './controllers/comment.controller';
 import { AccountController } from './controllers/account.controller';
@@ -36,7 +36,6 @@ export class App {
 		@inject(TYPES.IExceptionFilter) private readonly exceptionFilter: IExceptionFilter,
 		@inject(TYPES.PrismaService) private readonly prismaService: PrismaService,
 		@inject(TYPES.IAccountController) private readonly accountController: AccountController,
-		@inject(TYPES.IUserController) private readonly userController: UserController,
 		@inject(TYPES.IPostController) private readonly postController: PostController,
 		@inject(TYPES.ICommentController) private readonly commentController: CommentController,
 	) {
@@ -63,13 +62,14 @@ export class App {
 		this.app.use(helmet());
 		this.app.use(cors({ origin: this.serverConfig.allowedOrigin }));
 
+		this.app.use(cookieParser());
+
 		this.app.use(bodyParser.urlencoded({ extended: true }));
 		this.app.use(bodyParser.json());
 
-		// https://www.npmjs.com/package/morgan#using-format-string-of-predefined-tokens
-		this.app.use(morgan(':method :url :status'));
+		this.app.use(morgan('dev'));
 
-		const authMiddleware = new AuthMiddleware(this.serverConfig.secret);
+		const authMiddleware = new AuthMiddleware(this.serverConfig.jwtSecret);
 		this.app.use(authMiddleware.execute.bind(authMiddleware));
 	}
 
@@ -77,8 +77,7 @@ export class App {
 	 * Method is used to register server routes
 	 */
 	private useRoutes(): void {
-		this.app.use('/api/account', this.accountController.router);
-		this.app.use('/api/users', this.userController.router);
+		this.app.use('/api/auth', this.accountController.router);
 		this.app.use('/api/posts', this.postController.router);
 		this.app.use('/api/comments', this.commentController.router);
 	}
@@ -94,7 +93,7 @@ export class App {
 	 * Method is used to register the database
 	 */
 	private async useDatabase(): Promise<void> {
-		this.prismaService.connect();
+		await this.prismaService.connect();
 
 		// https://nodejs.org/api/process.html
 		process.on('SIGINT', async () => {

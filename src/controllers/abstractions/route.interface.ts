@@ -10,6 +10,6 @@ export interface IControllerRoute {
 	handler(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
-export type ExpressReturnType = Response<any, Record<string, any>>;
+export type TResponse = Response<any, Record<string, any>>;
 
-export type RequestType<T = any> = Request<{}, {}, T>;
+export type TRequest<T = any> = Request<{}, {}, T>;

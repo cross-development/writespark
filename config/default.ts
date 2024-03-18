@@ -6,7 +6,9 @@ const config = {
 	},
 	server: {
 		port: Number(process.env.PORT) || 8000,
-		allowedOrigin: Number(process.env.ALLOWED_ORIGIN) || 'http://localhost:3000',
+		allowedOrigin: process.env.ALLOWED_ORIGIN || 'http://localhost:3000',
+		saltLength: Number(process.env.SALT_LENGTH) || 10,
+		jwtSecret: process.env.JWT_SECRET || 'secret_key',
 	},
 };
 

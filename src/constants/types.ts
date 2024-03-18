@@ -5,6 +5,7 @@ export const TYPES = {
 	// Persistence
 	PrismaService: Symbol.for('PrismaService'),
 	// Common usage
+	IJwtService: Symbol.for('JwtService'),
 	ILoggerService: Symbol.for('LoggerService'),
 	IConfigService: Symbol.for('ConfigService'),
 	IExceptionFilter: Symbol.for('ExceptionFilter'),
@@ -12,10 +13,6 @@ export const TYPES = {
 	IAccountService: Symbol.for('AccountService'),
 	IAccountController: Symbol.for('AccountController'),
 	IAccountRepository: Symbol.for('AccountRepository'),
-	// User domain
-	IUserService: Symbol.for('UserService'),
-	IUserController: Symbol.for('UserController'),
-	IUserRepository: Symbol.for('UserRepository'),
 	// Post domain
 	IPostService: Symbol.for('PostService'),
 	IPostController: Symbol.for('PostController'),

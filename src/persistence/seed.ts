@@ -3,7 +3,13 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+/**
+ * Abstract seed class
+ */
 abstract class Seed {
+	/**
+	 * Static method is used to generate seeds with two users and their relationships.
+	 */
 	public static async generate(): Promise<void> {
 		const alice = await prisma.userModel.upsert({
 			where: { email: 'alice@prisma.io' },
@@ -11,7 +17,7 @@ abstract class Seed {
 			create: {
 				name: 'Alice',
 				email: 'alice@prisma.io',
-				password: 'Pa$$w0rd',
+				password: '$2a$10$EY4c9D5EyBLOUs8SRFIzhOTieXKXo/89ba2NrUN68fHzHqCwpn9G2', // pwd
 				posts: {
 					create: [
 						{
@@ -39,7 +45,7 @@ abstract class Seed {
 			create: {
 				name: 'Bob',
 				email: 'bob@prisma.io',
-				password: 'Pa$$w0rd',
+				password: '$2a$10$EY4c9D5EyBLOUs8SRFIzhOTieXKXo/89ba2NrUN68fHzHqCwpn9G2', // pwd
 				posts: {
 					create: [
 						{

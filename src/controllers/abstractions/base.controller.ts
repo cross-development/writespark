@@ -4,7 +4,7 @@ import { Response, Router } from 'express';
 // Constants
 import { StatusCode } from '../../constants/status-code.enum';
 // Types
-import { ExpressReturnType, IControllerRoute } from './route.interface';
+import { TResponse, IControllerRoute } from './route.interface';
 import { ILoggerService } from '../../services/abstractions/logger.service.interface';
 
 /**
@@ -32,19 +32,19 @@ export abstract class BaseController {
 	 * @param message - A message to send to a client
 	 * @returns A result of execution of status and json methods
 	 */
-	private send<T>(res: Response, code: StatusCode, message: T): ExpressReturnType {
+	private send<T>(res: Response, code: StatusCode, message: T): TResponse {
 		res.type('application/json');
 
 		return res.status(code).json(message);
 	}
 
 	/**
-	 * Method is used handle responses with an ok status
+	 * Method is used to handle responses with an ok status
 	 * @param res - The express response
 	 * @param message - A message to send to a client
 	 * @returns A result of execution of send method with 200 status
 	 */
-	protected ok<T>(res: Response, message: T): ExpressReturnType {
+	protected ok<T>(res: Response, message: T): TResponse {
 		return this.send<T>(res, StatusCode.OK, message);
 	}
 
@@ -53,7 +53,7 @@ export abstract class BaseController {
 	 * @param res - The express response
 	 * @returns A result of execution of sendStatus method with 201 status
 	 */
-	protected created<T>(res: Response, message: T): ExpressReturnType {
+	protected created<T>(res: Response, message: T): TResponse {
 		return this.send<T>(res, StatusCode.Created, message);
 	}
 
@@ -62,8 +62,21 @@ export abstract class BaseController {
 	 * @param res - The express response
 	 * @returns A result of execution of sendStatus method with 204 status
 	 */
-	protected noContent(res: Response): ExpressReturnType {
+	protected noContent(res: Response): TResponse {
 		return res.sendStatus(StatusCode.NoContent);
+	}
+
+	/**
+	 * Method is used to handle responses for with an ok status and sets token to the response cookie
+	 * @param res - The express response
+	 * @param code - A status code, see the StatusCode enum
+	 * @param message - A message to set to the response cookie
+	 * @returns A result of execution of send method with 200 status
+	 */
+	protected auth<T>(res: Response, code: StatusCode, message: T): TResponse {
+		res.cookie('accessToken', message, { httpOnly: true });
+
+		return this.send(res, code, {});
 	}
 
 	/**

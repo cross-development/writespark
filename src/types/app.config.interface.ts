@@ -13,5 +13,6 @@ export type TLoggerConfig = {
 export type TServerConfig = {
 	port: number;
 	allowedOrigin: string;
-	secret: string;
+	jwtSecret: string;
+	saltLength: number;
 };

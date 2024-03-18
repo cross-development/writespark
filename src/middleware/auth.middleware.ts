@@ -8,7 +8,7 @@ import { IMiddleware } from './abstractions/middleware.interface';
  * A middleware to validate a user authentication
  */
 export class AuthMiddleware implements IMiddleware {
-	constructor(private readonly secret: string) {}
+	constructor(private readonly jwtSecret: string) {}
 
 	/**
 	 * Method is used to execute a validation
@@ -17,14 +17,14 @@ export class AuthMiddleware implements IMiddleware {
 	 * @param next - The next function called to pass the request further
 	 */
 	public execute(req: Request, res: Response, next: NextFunction): void {
-		if (req.headers.authorization) {
-			const token = req.headers.authorization.split(' ')[1];
+		if (req.cookies?.accessToken) {
+			const token = req.cookies.accessToken as string;
 
-			verify(token, this.secret, (error, payload) => {
+			verify(token, this.jwtSecret, (error, payload) => {
 				if (error) {
 					next();
 				} else if (payload) {
-					req.user = payload.email;
+					req.user = payload as Request['user'];
 
 					next();
 				}
