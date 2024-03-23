@@ -15,7 +15,7 @@ import { BusinessException } from '../exceptions/business-exception';
 import { TYPES } from '../constants/types';
 import { StatusCode } from '../constants/status-code.enum';
 // Types
-import { TRequest } from './abstractions/route.interface';
+import { TRequestWithBody } from './abstractions/route.interface';
 import { IAccountController } from './abstractions/account.controller.interface';
 import { IAccountService } from '../services/abstractions/account.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
@@ -88,7 +88,7 @@ export class AccountController extends BaseController implements IAccountControl
 	 * @param next - The next function called to pass the request further
 	 * @returns - If the user not found, the business exception is returned
 	 */
-	public async login(req: TRequest<LoginDto>, res: Response, next: NextFunction): Promise<void> {
+	public async login(req: TRequestWithBody<LoginDto>, res: Response, next: NextFunction): Promise<void> {
 		const existingUser = await this.accountService.validateUser(req.body);
 
 		if (!existingUser) {
@@ -107,7 +107,7 @@ export class AccountController extends BaseController implements IAccountControl
 	 * @param next - The next function called to pass the request further
 	 * @returns - If the user already exists, the business exception is returned
 	 */
-	public async register(req: TRequest<RegisterDto>, res: Response, next: NextFunction): Promise<void> {
+	public async register(req: TRequestWithBody<RegisterDto>, res: Response, next: NextFunction): Promise<void> {
 		const newUser = await this.accountService.createUser(req.body);
 
 		if (!newUser) {

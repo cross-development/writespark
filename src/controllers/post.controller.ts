@@ -8,13 +8,14 @@ import { ValidateMiddleware } from '../middleware/validate.middleware';
 // Exceptions
 import { BusinessException } from '../exceptions/business-exception';
 // Dto
+import { GetPostsDto } from '../dto/get-posts.dto';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { RequestParamsDto } from '../dto/request-params.dto';
 // Constants
 import { TYPES } from '../constants/types';
 import { StatusCode } from '../constants/status-code.enum';
 // Types
-import { TRequest } from './abstractions/route.interface';
+import { TRequestWithBody, TRequestWithParams } from './abstractions/route.interface';
 import { IPostController } from './abstractions/post.controller.interface';
 import { IPostService } from '../services/abstractions/post.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
@@ -41,13 +42,13 @@ export class PostController extends BaseController implements IPostController {
 			{
 				path: '/',
 				method: 'get',
-				handler: this.getAllPosts,
-				middleware: [],
+				handler: this.getPosts,
+				middleware: [new ValidateMiddleware(GetPostsDto, 'params')],
 			},
 			{
 				path: '/:id',
 				method: 'get',
-				handler: this.getOnePost,
+				handler: this.getPostById,
 				middleware: [new ValidateMiddleware(RequestParamsDto, 'params')],
 			},
 			{
@@ -69,10 +70,9 @@ export class PostController extends BaseController implements IPostController {
 	 * Method is used to get the list of posts
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
 	 */
-	public async getAllPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const posts = await this.postService.getAllPosts();
+	public async getPosts(req: TRequestWithParams<GetPostsDto>, res: Response): Promise<void> {
+		const posts = await this.postService.getPosts(req.params);
 
 		this.ok(res, posts);
 	}
@@ -84,8 +84,12 @@ export class PostController extends BaseController implements IPostController {
 	 * @param next - The next function called to pass the request further
 	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
-	public async getOnePost(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const post = await this.postService.getPostById(Number(req.params.id));
+	public async getPostById(
+		req: TRequestWithParams<RequestParamsDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const post = await this.postService.getPostById(req.params.id);
 
 		if (!post) {
 			return next(new BusinessException(StatusCode.NotFound, 'Post not found', '[PostController]'));
@@ -101,7 +105,7 @@ export class PostController extends BaseController implements IPostController {
 	 * @param next - The next function called to pass the request further
 	 * @returns - If there is a post for the provided title, the business exception is returned
 	 */
-	public async createPost(req: TRequest<CreatePostDto>, res: Response, next: NextFunction): Promise<void> {
+	public async createPost(req: TRequestWithBody<CreatePostDto>, res: Response, next: NextFunction): Promise<void> {
 		const newPost = await this.postService.createPost(req.user.id, req.body);
 
 		if (!newPost) {
@@ -118,8 +122,8 @@ export class PostController extends BaseController implements IPostController {
 	 * @param next - The next function called to pass the request further
 	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
-	public async deletePost(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const deletedPost = await this.postService.deletePost(Number(req.params.id));
+	public async deletePost(req: TRequestWithParams<RequestParamsDto>, res: Response, next: NextFunction): Promise<void> {
+		const deletedPost = await this.postService.deletePost(req.params.id);
 
 		if (!deletedPost) {
 			return next(new BusinessException(StatusCode.NotFound, 'Post not found', '[PostController]'));
