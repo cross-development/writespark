@@ -1,6 +1,6 @@
 // Packages
 import { inject, injectable } from 'inversify';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 // Controllers
 import { BaseController } from './abstractions/base.controller';
 // Middleware
@@ -84,12 +84,8 @@ export class PostController extends BaseController implements IPostController {
 	 * @param next - The next function called to pass the request further
 	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
-	public async getPostById(
-		req: TRequestWithParams<RequestParamsDto>,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> {
-		const post = await this.postService.getPostById(req.params.id);
+	public async getPostById(req: TRequestWithParams<RequestParamsDto>, res: Response, next: NextFunction): Promise<void> {
+		const post = await this.postService.getPostById(Number(req.params.id));
 
 		if (!post) {
 			return next(new BusinessException(StatusCode.NotFound, 'Post not found', '[PostController]'));
@@ -123,7 +119,7 @@ export class PostController extends BaseController implements IPostController {
 	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
 	public async deletePost(req: TRequestWithParams<RequestParamsDto>, res: Response, next: NextFunction): Promise<void> {
-		const deletedPost = await this.postService.deletePost(req.params.id);
+		const deletedPost = await this.postService.deletePost(Number(req.params.id));
 
 		if (!deletedPost) {
 			return next(new BusinessException(StatusCode.NotFound, 'Post not found', '[PostController]'));

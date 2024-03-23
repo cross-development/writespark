@@ -11,12 +11,12 @@
 		"lint": "eslint ./src/**",
 		"lint:fix": "eslint ./src/** --fix",
 		"generate": "prisma generate",
-		"seed": "prisma db seed",
+		"migrate": "prisma migrate dev --name",
+		"seed": "ts-node --transpile-only ./src/persistence/seed.ts",
 		"debug": "nodemon -e ts,json --exec node --inspect=localhost:9222 -r ts-node/register src/main.ts"
 	},
 	"prisma": {
-		"schema": "./src/persistence/schema.prisma",
-		"seed": "ts-node --transpile-only ./src/persistence/seed.ts"
+		"schema": "./src/persistence/schema.prisma"
 	},
 	"keywords": [],
 	"author": "Vitalii Derda",
