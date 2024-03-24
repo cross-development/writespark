@@ -1,3 +1,5 @@
+// Core
+import path from 'path';
 // Packages
 import express, { Express } from 'express';
 import { injectable, inject } from 'inversify';
@@ -6,16 +8,21 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import * as hbs from 'express-handlebars';
 // Controllers
+import { HomeController } from './controllers/home.controller';
 import { PostController } from './controllers/post.controller';
 import { CommentController } from './controllers/comment.controller';
 import { AccountController } from './controllers/account.controller';
 // Middleware
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { VarsMiddleware } from './middleware/vars.middleware';
 // Persistence
 import { PrismaService } from './persistence/prisma.service';
 // Constants
 import { TYPES } from './constants/types';
+// Utils
+import { hbsHelpers } from './utils/hbs.helpers';
 // Types
 import { TServerConfig } from './types/app.config.interface';
 import { ILoggerService } from './services/abstractions/logger.service.interface';
@@ -36,6 +43,7 @@ export class App {
 		@inject(TYPES.IExceptionFilter) private readonly exceptionFilter: IExceptionFilter,
 		@inject(TYPES.PrismaService) private readonly prismaService: PrismaService,
 		@inject(TYPES.IAccountController) private readonly accountController: AccountController,
+		@inject(TYPES.IHomeController) private readonly homeController: HomeController,
 		@inject(TYPES.IPostController) private readonly postController: PostController,
 		@inject(TYPES.ICommentController) private readonly commentController: CommentController,
 	) {
@@ -47,12 +55,31 @@ export class App {
 	 * Method is used to initialize the server
 	 */
 	public async init(): Promise<void> {
+		this.useViews();
 		this.useMiddleware();
 		this.useRoutes();
 		this.useExceptionFilters();
 		await this.useDatabase();
 
 		this.listen();
+	}
+
+	/**
+	 * Method is used to register view engine
+	 */
+	private useViews(): void {
+		this.app.use('/public', express.static(path.join(__dirname, 'public')));
+		this.app.engine(
+			'hbs',
+			hbs.engine({
+				extname: '.hbs',
+				defaultLayout: 'main',
+				layoutsDir: path.join(__dirname, 'views', 'layouts'),
+				helpers: hbsHelpers,
+			}),
+		);
+		this.app.set('view engine', 'hbs');
+		this.app.set('views', path.join(__dirname, 'views'));
 	}
 
 	/**
@@ -71,15 +98,19 @@ export class App {
 
 		const authMiddleware = new AuthMiddleware(this.serverConfig.jwtSecret);
 		this.app.use(authMiddleware.execute.bind(authMiddleware));
+
+		const varsMiddleware = new VarsMiddleware();
+		this.app.use(varsMiddleware.execute.bind(varsMiddleware));
 	}
 
 	/**
 	 * Method is used to register server routes
 	 */
 	private useRoutes(): void {
-		this.app.use('/api/auth', this.accountController.router);
-		this.app.use('/api/posts', this.postController.router);
-		this.app.use('/api/comments', this.commentController.router);
+		this.app.use('/auth', this.accountController.router);
+		this.app.use('/posts', this.postController.router);
+		this.app.use('/comments', this.commentController.router);
+		this.app.use('/', this.homeController.router);
 	}
 
 	/**

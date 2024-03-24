@@ -49,15 +49,30 @@ export class AccountController extends BaseController implements IAccountControl
 			},
 			{
 				path: '/login',
+				method: 'get',
+				handler: this.renderLogin,
+			},
+			{
+				path: '/login',
 				method: 'post',
 				handler: this.login,
 				middleware: [new ValidateMiddleware(LoginDto)],
 			},
 			{
 				path: '/register',
+				method: 'get',
+				handler: this.renderRegister,
+			},
+			{
+				path: '/register',
 				method: 'post',
 				handler: this.register,
 				middleware: [new ValidateMiddleware(RegisterDto)],
+			},
+			{
+				path: '/logout',
+				method: 'get',
+				handler: this.logout,
 			},
 		]);
 	}
@@ -82,6 +97,16 @@ export class AccountController extends BaseController implements IAccountControl
 	}
 
 	/**
+	 * Method is used to render the login view
+	 * @param req - The express request
+	 * @param res - The express response
+	 * @param next - The next function called to pass the request further
+	 */
+	public async renderLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
+		return res.render('auth/login');
+	}
+
+	/**
 	 * Method is used to login a user
 	 * @param req - The express request
 	 * @param res - The express response
@@ -92,12 +117,24 @@ export class AccountController extends BaseController implements IAccountControl
 		const existingUser = await this.accountService.validateUser(req.body);
 
 		if (!existingUser) {
-			return next(new BusinessException(StatusCode.NotFound, 'User not found', '[AccountController]'));
+			return res.redirect('auth/login');
 		}
 
 		const accessToken = this.jwtService.sign({ id: existingUser.id, email: existingUser.email });
 
-		this.auth(res, StatusCode.OK, accessToken);
+		res.cookie('accessToken', accessToken, { httpOnly: true });
+
+		return res.redirect('/');
+	}
+
+	/**
+	 * Method is used to render the register view
+	 * @param req - The express request
+	 * @param res - The express response
+	 * @param next - The next function called to pass the request further
+	 */
+	public async renderRegister(req: Request, res: Response, next: NextFunction): Promise<void> {
+		return res.render('auth/register');
 	}
 
 	/**
@@ -105,17 +142,30 @@ export class AccountController extends BaseController implements IAccountControl
 	 * @param req - The express request
 	 * @param res - The express response
 	 * @param next - The next function called to pass the request further
-	 * @returns - If the user already exists, the business exception is returned
 	 */
 	public async register(req: TRequestWithBody<RegisterDto>, res: Response, next: NextFunction): Promise<void> {
 		const newUser = await this.accountService.createUser(req.body);
 
 		if (!newUser) {
-			return next(new BusinessException(StatusCode.Conflict, 'User already exists', '[AccountController]'));
+			return res.redirect('auth/register');
 		}
 
 		const accessToken = this.jwtService.sign({ id: newUser.id, email: newUser.email });
 
-		this.auth(res, StatusCode.Created, accessToken);
+		res.cookie('accessToken', accessToken, { httpOnly: true });
+
+		return res.redirect('/');
+	}
+
+	/**
+	 * Method is used to logout user
+	 * @param req - The express request
+	 * @param res - The express response
+	 * @param next - The next function called to pass the request further
+	 */
+	public async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+		res.clearCookie('accessToken');
+
+		return res.redirect('/');
 	}
 }

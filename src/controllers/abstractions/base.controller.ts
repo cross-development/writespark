@@ -67,25 +67,12 @@ export abstract class BaseController {
 	}
 
 	/**
-	 * Method is used to handle responses for with an ok status and sets token to the response cookie
-	 * @param res - The express response
-	 * @param code - A status code, see the StatusCode enum
-	 * @param message - A message to set to the response cookie
-	 * @returns A result of execution of send method with 200 status
-	 */
-	protected auth<T>(res: Response, code: StatusCode, message: T): TResponse {
-		res.cookie('accessToken', message, { httpOnly: true });
-
-		return this.send(res, code, {});
-	}
-
-	/**
 	 * Method is used to bind all the routes provided
 	 * @param routes - A list of routes to bind to the router
 	 */
 	protected bindRoutes(routes: IControllerRoute[]): void {
 		for (const route of routes) {
-			this.logger.info('[BaseController]', `[${route.method}] ${route.path}`);
+			this.logger.info('[BaseController]', `[${route.method}] ${route.handler.name} - ${route.path}`);
 
 			const handler = route.handler.bind(this);
 

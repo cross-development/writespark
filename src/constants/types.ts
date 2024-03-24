@@ -9,6 +9,7 @@ export const TYPES = {
 	ILoggerService: Symbol.for('LoggerService'),
 	IConfigService: Symbol.for('ConfigService'),
 	IExceptionFilter: Symbol.for('ExceptionFilter'),
+	IHomeController: Symbol.for('HomeController'),
 	// Account domain
 	IAccountService: Symbol.for('AccountService'),
 	IAccountController: Symbol.for('AccountController'),

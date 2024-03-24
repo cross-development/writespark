@@ -25,6 +25,7 @@ export class AuthMiddleware implements IMiddleware {
 					next();
 				} else if (payload) {
 					req.user = payload as Request['user'];
+					req.user.isAuthentication = true;
 
 					next();
 				}

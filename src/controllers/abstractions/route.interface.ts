@@ -13,7 +13,7 @@ export interface IControllerRoute {
 
 export type TResponse = Response<any, Record<string, any>>;
 
-type TRequest = Request | TRequestWithBody | TRequestWithParams;
+export type TRequest = Request | TRequestWithBody | TRequestWithParams;
 
 export type TRequestWithBody<T = any> = Request<{}, {}, T>;
 

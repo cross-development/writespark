@@ -15,6 +15,7 @@ import { ConfigService } from './services/config.service';
 // Persistence
 import { PrismaService } from './persistence/prisma.service';
 // Controllers
+import { HomeController } from './controllers/home.controller';
 import { PostController } from './controllers/post.controller';
 import { CommentController } from './controllers/comment.controller';
 import { AccountController } from './controllers/account.controller';
@@ -41,6 +42,7 @@ import { IAccountService } from './services/abstractions/account.service.interfa
 import { IAccountRepository } from './repositories/abstractions/account.repository.interface';
 import { IAccountController } from './controllers/abstractions/account.controller.interface';
 import { IJwtService } from './services/abstractions/jwt.service.interface';
+import { IHomeController } from './controllers/abstractions/home.controller.interface';
 
 // Bind all the dependencies for the DI container
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
@@ -53,6 +55,7 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<ILoggerService>(TYPES.ILoggerService).to(LoggerService).inSingletonScope();
 	bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope();
 	bind<IExceptionFilter>(TYPES.IExceptionFilter).to(ExceptionFilter).inSingletonScope();
+	bind<IHomeController>(TYPES.IHomeController).to(HomeController);
 	// Posts
 	bind<IPostService>(TYPES.IPostService).to(PostService);
 	bind<IPostRepository>(TYPES.IPostRepository).to(PostRepository);
