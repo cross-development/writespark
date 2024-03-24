@@ -5,7 +5,6 @@ import { PostModel } from '@prisma/client';
 // Domain
 import { Post } from '../domain/post';
 // Dto
-import { GetPostsDto } from '../dto/get-posts.dto';
 import { CreatePostDto } from '../dto/create-post.dto';
 // Repositories
 import { PostRepository } from '../repositories/post.repository';
@@ -23,11 +22,11 @@ export class PostService implements IPostService {
 
 	/**
 	 * Method is used to get the list of posts including author info and comments
-	 * @param filters - A set of parameters for filtering
+	 * @param authorId - An author id
 	 * @returns A list of all posts including author info and comments
 	 */
-	public async getPosts(filters: GetPostsDto): Promise<PostModel[]> {
-		return this.postRepository.getAll(filters);
+	public async getPosts(authorId?: number): Promise<PostModel[]> {
+		return this.postRepository.getAll(authorId);
 	}
 
 	/**

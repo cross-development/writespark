@@ -8,20 +8,19 @@ import { ValidateMiddleware } from '../middleware/validate.middleware';
 // Exceptions
 import { BusinessException } from '../exceptions/business-exception';
 // Dto
-import { GetPostsDto } from '../dto/get-posts.dto';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { RequestParamsDto } from '../dto/request-params.dto';
 // Constants
 import { TYPES } from '../constants/types';
 import { StatusCode } from '../constants/status-code.enum';
 // Types
-import { TRequestWithBody, TRequestWithParams } from './abstractions/route.interface';
 import { IPostController } from './abstractions/post.controller.interface';
 import { IPostService } from '../services/abstractions/post.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
+import { TRequestWithBody, TRequestWithParams, TRequest } from './abstractions/route.interface';
 
 /**
- * A post controller is used to perform CRUD operations with posts
+ * A post controller is used to perform CRUD operations with posts and render its views
  */
 @injectable()
 export class PostController extends BaseController implements IPostController {
@@ -43,7 +42,6 @@ export class PostController extends BaseController implements IPostController {
 				path: '/',
 				method: 'get',
 				handler: this.getPosts,
-				middleware: [new ValidateMiddleware(GetPostsDto, 'params')],
 			},
 			{
 				path: '/:id',
@@ -70,9 +68,10 @@ export class PostController extends BaseController implements IPostController {
 	 * Method is used to get the list of posts
 	 * @param req - The express request
 	 * @param res - The express response
+	 * @param next - The next function called to pass the request further
 	 */
-	public async getPosts(req: TRequestWithParams<GetPostsDto>, res: Response): Promise<void> {
-		const posts = await this.postService.getPosts(req.params);
+	public async getPosts(req: TRequest, res: Response, next: NextFunction): Promise<void> {
+		const posts = await this.postService.getPosts();
 
 		this.ok(res, posts);
 	}
@@ -88,10 +87,10 @@ export class PostController extends BaseController implements IPostController {
 		const post = await this.postService.getPostById(Number(req.params.id));
 
 		if (!post) {
-			return next(new BusinessException(StatusCode.NotFound, 'Post not found', '[PostController]'));
+			return res.status(StatusCode.NotFound).render('404');
 		}
 
-		this.ok(res, post);
+		return res.render('post', { post });
 	}
 
 	/**

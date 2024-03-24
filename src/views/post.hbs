@@ -1,0 +1,11 @@
+<div style="height: calc(100vh - 76px - 24px - 88px); overflow: hidden; overflow-y: auto;">
+    <article>
+        <h2 class=" h2">{{post.title}}</h2>
+
+        <p class="fst-italic">{{dateFormat post.createdAt "MMMM Do, YYYY"}} by
+            <a href="/profiles/{{post.author.id}}">{{post.author.name}}</a>
+        </p>
+
+        <p>{{post.content}}</p>
+    </article>
+</div>
