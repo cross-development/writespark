@@ -44,7 +44,14 @@ export class PostRepository implements IPostRepository {
 		return this.prismaService.client.postModel.findUnique({
 			where: params,
 			include: {
-				comments: true,
+				comments: {
+					select: {
+						id: true,
+						body: true,
+						createdAt: true,
+						author: { select: { id: true, name: true } },
+					},
+				},
 				author: {
 					select: { id: true, name: true, email: true },
 				},
