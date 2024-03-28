@@ -3,41 +3,37 @@
         <article class="mb-5 pt-5">
             <h2 class="h2 mb-4 text-center">{{post.title}}</h2>
 
-            <p class="mb-4 text-muted" style="font-size: 14px;">{{dateFormat post.createdAt "MMMM dd, yyyy"}} by
-                <a href="/profiles/{{post.author.id}}">{{post.author.name}}</a>
-            </p>
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                {{> avatar authorId=post.author.id authorName=post.author.name}}
+
+                <p class="mb-0 text-muted" style="font-size: 14px;">{{dateFormat post.createdAt "MMMM dd, yyyy"}}</p>
+            </div>
 
             <p class="mb-0">{{post.content}}</p>
         </article>
 
-        {{#if post.comments}}
+
         <div class="row justify-content-md-center align-items-center">
             <div class="col-8">
-                <h5 class="mb-4">Comments:</h5>
+                <h5 class="mb-3">Comments:</h5>
 
                 {{#if isAuth}}
-                <form method="post" action="/comments" class="d-flex flex-column mb-3">
-                    <textarea rows="4" class="mb-2" style="resize: none;"></textarea>
+                <form method="post" class="d-flex flex-column mb-3">
+                    <textarea name="body" rows="4" class="mb-2 p-2 rounded" style="resize: none;"></textarea>
 
                     <button class="btn btn-sm btn-primary fs-6 align-self-end" type="submit">Comment</button>
                 </form>
                 {{/if}}
 
+                {{#if post.comments}}
                 <ul class="list-unstyled mb-0">
                     {{#each post.comments}}
-                    <li class="mb-3 pb-2 border-bottom">
+                    <li class="mb-4 pb-2 border-bottom">
                         <div class="mb-2">
-                            <div class="d-flex gap-2 mb-1">
-                                <div class="rounded-circle p-1"
-                                    style="width: 24px; height: 24px; background-color: #cecece;">
-                                    <i class="bi bi-person-fill d-flex"></i>
-                                </div>
+                            {{> avatar authorId=author.id authorName=author.name}}
 
-                                <a class="fs-6 text-decoration-none" href="/profiles/{{author.id}}">{{author.name}}</a>
-                            </div>
-
-                            <p class="text-muted mb-0" style="font-size: 12px;">
-                                {{dateFormat createdAt "MMMM dd, yyyy hh:mm"}}
+                            <p class="text-muted mb-0 mt-1" style="font-size: 12px;">
+                                {{dateFormat createdAt "MMMM dd, yyyy HH:mm"}}
                             </p>
                         </div>
 
@@ -45,8 +41,8 @@
                     </li>
                     {{/each}}
                 </ul>
+                {{/if}}
             </div>
         </div>
-        {{/if}}
     </div>
 </div>

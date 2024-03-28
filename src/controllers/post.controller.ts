@@ -4,12 +4,14 @@ import { Response, NextFunction } from 'express';
 // Controllers
 import { BaseController } from './abstractions/base.controller';
 // Middleware
+import { AuthGuard } from '../middleware/auth.guard';
 import { ValidateMiddleware } from '../middleware/validate.middleware';
 // Exceptions
 import { BusinessException } from '../exceptions/business-exception';
 // Dto
 import { CreatePostDto } from '../dto/create-post.dto';
 import { RequestParamsDto } from '../dto/request-params.dto';
+import { CreateCommentDto } from '../dto/create-comment.dto';
 // Constants
 import { TYPES } from '../constants/types';
 import { StatusCode } from '../constants/status-code.enum';
@@ -17,7 +19,8 @@ import { StatusCode } from '../constants/status-code.enum';
 import { IPostController } from './abstractions/post.controller.interface';
 import { IPostService } from '../services/abstractions/post.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
-import { TRequestWithBody, TRequestWithParams, TRequest } from './abstractions/route.interface';
+import { ICommentService } from '../services/abstractions/comment.service.interface';
+import { TRequestWithBody, TRequestWithParams, TRequest, TRequestWithParamsAndBody } from './abstractions/route.interface';
 
 /**
  * A post controller is used to perform CRUD operations with posts and render its views
@@ -26,6 +29,7 @@ import { TRequestWithBody, TRequestWithParams, TRequest } from './abstractions/r
 export class PostController extends BaseController implements IPostController {
 	constructor(
 		@inject(TYPES.IPostService) private readonly postService: IPostService,
+		@inject(TYPES.ICommentService) private readonly commentService: ICommentService,
 		@inject(TYPES.ILoggerService) private readonly loggerService: ILoggerService,
 	) {
 		super(loggerService);
@@ -50,6 +54,16 @@ export class PostController extends BaseController implements IPostController {
 				middleware: [new ValidateMiddleware(RequestParamsDto, 'params')],
 			},
 			{
+				path: '/:id',
+				method: 'post',
+				handler: this.createComment,
+				middleware: [
+					new AuthGuard(),
+					new ValidateMiddleware(RequestParamsDto, 'params'),
+					new ValidateMiddleware(CreateCommentDto),
+				],
+			},
+			{
 				path: '/',
 				method: 'post',
 				handler: this.createPost,
@@ -70,7 +84,7 @@ export class PostController extends BaseController implements IPostController {
 	 * @param res - The express response
 	 * @param next - The next function called to pass the request further
 	 */
-	public async getPosts(req: TRequest, res: Response, next: NextFunction): Promise<void> {
+	public async getPosts(req: TRequest, res: Response): Promise<void> {
 		const posts = await this.postService.getPosts();
 
 		this.ok(res, posts);
@@ -83,7 +97,7 @@ export class PostController extends BaseController implements IPostController {
 	 * @param next - The next function called to pass the request further
 	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
-	public async getPostById(req: TRequestWithParams<RequestParamsDto>, res: Response, next: NextFunction): Promise<void> {
+	public async getPostById(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
 		const post = await this.postService.getPostById(Number(req.params.id));
 
 		if (!post) {
@@ -125,5 +139,26 @@ export class PostController extends BaseController implements IPostController {
 		}
 
 		this.ok(res, { id: deletedPost.id });
+	}
+
+	/**
+	 * Method is used to create a new comment
+	 * @param req - The express request
+	 * @param res - The express response
+	 * @param next - The next function called to pass the request further
+	 */
+	public async createComment(req: TRequestWithParamsAndBody<RequestParamsDto, CreateCommentDto>, res: Response): Promise<void> {
+		const authorId = req.user.id;
+		const postId = Number(req.params.id);
+
+		const newComment = await this.commentService.createComment(authorId, postId, req.body);
+
+		if (!newComment) {
+			return res.status(StatusCode.BadRequest).redirect('404');
+		}
+
+		const post = await this.postService.getPostById(postId);
+
+		return res.render('post', { post });
 	}
 }
