@@ -47,6 +47,12 @@ export class HomeController extends BaseController implements IHomeController {
 	public async renderFeed(req: Request, res: Response<any, Record<string, any>>, next: NextFunction): Promise<void> {
 		const posts = await this.postService.getPosts();
 
-		return res.render('index', { posts });
+		const postsByCategories = {
+			top: posts[0],
+			trending: posts.slice(1, 3),
+			latest: posts.slice(3),
+		};
+
+		return res.render('index', { posts: postsByCategories });
 	}
 }

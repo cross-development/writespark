@@ -1,48 +1,50 @@
-<div style="height: calc(100vh - 76px - 24px - 88px); overflow: hidden; overflow-y: auto;">
-    <article class="mb-5 pt-5">
-        <h2 class="h2 text-center">{{post.title}}</h2>
+<div style="row">
+    <div class="col-8 mx-auto">
+        <article class="mb-5 pt-5">
+            <h2 class="h2 mb-4 text-center">{{post.title}}</h2>
 
-        <p class="fst-italic mb-4" style="font-size: 14px;">{{dateFormat post.createdAt "MMMM Do, YYYY"}} by
-            <a href="/profiles/{{post.author.id}}">{{post.author.name}}</a>
-        </p>
+            <p class="mb-4 text-muted" style="font-size: 14px;">{{dateFormat post.createdAt "MMMM Do, YYYY"}} by
+                <a href="/profiles/{{post.author.id}}">{{post.author.name}}</a>
+            </p>
 
-        <p class="mb-0">{{post.content}}</p>
-    </article>
+            <p class="mb-0">{{post.content}}</p>
+        </article>
 
-    <div class="row justify-content-md-center align-items-center">
-        <div class="col-5">
-            <h5 class="mb-4">Comments:</h5>
+        <div class="row justify-content-md-center align-items-center">
+            <div class="col-8">
+                <h5 class="mb-4">Comments:</h5>
 
-            {{#if isAuth}}
-            <form method="post" action="/comments" class="d-flex flex-column mb-3">
-                <textarea rows="4" class="mb-2" style="resize: none;"></textarea>
+                {{#if isAuth}}
+                <form method="post" action="/comments" class="d-flex flex-column mb-3">
+                    <textarea rows="4" class="mb-2" style="resize: none;"></textarea>
 
-                <button class="btn btn-sm btn-primary fs-6 align-self-end" type="submit">Comment</button>
-            </form>
-            {{/if}}
+                    <button class="btn btn-sm btn-primary fs-6 align-self-end" type="submit">Comment</button>
+                </form>
+                {{/if}}
 
-            <ul class="list-unstyled mb-0">
-                {{#each post.comments}}
-                <li class="mb-2 pb-2 border-bottom">
-                    <div class="mb-2">
-                        <div class="d-flex gap-2 mb-1">
-                            <div class="rounded-circle p-1"
-                                style="width: 24px; height: 24px; background-color: #cecece;">
-                                <i class="bi bi-person-fill d-flex"></i>
+                <ul class="list-unstyled mb-0">
+                    {{#each post.comments}}
+                    <li class="mb-3 pb-2 border-bottom">
+                        <div class="mb-2">
+                            <div class="d-flex gap-2 mb-1">
+                                <div class="rounded-circle p-1"
+                                    style="width: 24px; height: 24px; background-color: #cecece;">
+                                    <i class="bi bi-person-fill d-flex"></i>
+                                </div>
+
+                                <a class="fs-6 text-decoration-none" href="/profiles/{{author.id}}">{{author.name}}</a>
                             </div>
 
-                            <a class="fs-6 text-decoration-none" href="/profiles/{{author.id}}">{{author.name}}</a>
+                            <p class="text-muted mb-0" style="font-size: 12px;">
+                                {{dateFormat createdAt "MMMM Do, YYYY"}}
+                            </p>
                         </div>
 
-                        <p class="text-secondary mb-0" style="font-size: 12px;">
-                            {{dateFormat createdAt "MMMM Do, YYYY"}}
-                        </p>
-                    </div>
-
-                    <p class="mb-0 fs-6">{{body}}</p>
-                </li>
-                {{/each}}
-            </ul>
+                        <p class="mb-0 fs-6">{{body}}</p>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
         </div>
     </div>
 </div>
