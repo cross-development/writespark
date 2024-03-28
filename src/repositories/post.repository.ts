@@ -19,7 +19,7 @@ export class PostRepository implements IPostRepository {
 	constructor(@inject(TYPES.PrismaService) private readonly prismaService: PrismaService) {}
 
 	/**
-	 * Method is used to get all posts including author info
+	 * Method is used to get all posts including author info and comments
 	 * @param authorId - An author id
 	 * @returns A list of all posts
 	 */
@@ -28,6 +28,7 @@ export class PostRepository implements IPostRepository {
 			where: { authorId },
 			orderBy: { createdAt: 'desc' },
 			include: {
+				comments: true,
 				author: {
 					select: { id: true, name: true, email: true },
 				},
@@ -45,6 +46,7 @@ export class PostRepository implements IPostRepository {
 			where: params,
 			include: {
 				comments: {
+					orderBy: { createdAt: 'desc' },
 					select: {
 						id: true,
 						body: true,

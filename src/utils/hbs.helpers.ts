@@ -1,13 +1,11 @@
+import dateFns from 'date-fns';
+
 /**
  * Some helpers for the Handlebars engine
  */
 export const hbsHelpers = {
-	dateFormat(date: string): string {
-		return new Intl.DateTimeFormat('en-US', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		}).format(new Date(date));
+	dateFormat(date: string, format: string): string {
+		return dateFns.format(date, format);
 	},
 	ifEqual(a: string, b: string, options: any): boolean {
 		if (Number(a) === Number(b)) {
@@ -20,5 +18,8 @@ export const hbsHelpers = {
 		const ending = text.length <= +length ? '' : '...';
 
 		return text.slice(0, +length) + ending;
+	},
+	getArrayLength(array: unknown[]): number {
+		return array?.length;
 	},
 };

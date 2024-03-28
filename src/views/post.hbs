@@ -3,13 +3,14 @@
         <article class="mb-5 pt-5">
             <h2 class="h2 mb-4 text-center">{{post.title}}</h2>
 
-            <p class="mb-4 text-muted" style="font-size: 14px;">{{dateFormat post.createdAt "MMMM Do, YYYY"}} by
+            <p class="mb-4 text-muted" style="font-size: 14px;">{{dateFormat post.createdAt "MMMM dd, yyyy"}} by
                 <a href="/profiles/{{post.author.id}}">{{post.author.name}}</a>
             </p>
 
             <p class="mb-0">{{post.content}}</p>
         </article>
 
+        {{#if post.comments}}
         <div class="row justify-content-md-center align-items-center">
             <div class="col-8">
                 <h5 class="mb-4">Comments:</h5>
@@ -36,7 +37,7 @@
                             </div>
 
                             <p class="text-muted mb-0" style="font-size: 12px;">
-                                {{dateFormat createdAt "MMMM Do, YYYY"}}
+                                {{dateFormat createdAt "MMMM dd, yyyy hh:mm"}}
                             </p>
                         </div>
 
@@ -46,5 +47,6 @@
                 </ul>
             </div>
         </div>
+        {{/if}}
     </div>
 </div>

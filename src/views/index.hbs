@@ -11,10 +11,13 @@
     <div class="col-md-6">
         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
-                <h3 class="mb-0">{{title}}</h3>
-                <div class="mb-1 text-muted">{{dateFormat createdAt "MMMM Do, YYYY"}}</div>
-                <p class="card-text mb-auto">{{cutString content "100"}}</p>
-                <a href="/posts/{{id}}" class="stretched-link">Continue reading</a>
+                <h2 class="h2">{{title}}</h2>
+                <div class="mb-1 text-muted">{{dateFormat createdAt "MMMM dd, yyyy"}}</div>
+                <p class="card-text mb-auto">{{cutString content "90"}}</p>
+                <div class="d-flex justify-content-between">
+                    <a href="/posts/{{id}}">Continue reading</a>
+                    <span class="text-muted fs-6">Comments ({{getArrayLength comments}})</span>
+                </div>
             </div>
 
             <div class="col-auto d-none d-lg-block">
@@ -34,13 +37,16 @@
 <div class="row g-5">
     <div class="col-md-8">
         {{#each posts.latest}}
-        <article class="d-flex flex-column pt-2 pb-4 border-bottom">
-            <h2 class="h2">{{title}}</h2>
-            <p class="fst-italic text-muted">{{dateFormat createdAt "MMMM Do, YYYY"}}
+        <article class="pt-2 pb-4 border-bottom">
+            <h3 class="h3">{{title}}</h3>
+            <p class="text-muted">{{dateFormat createdAt "MMMM dd, yyyy"}}
                 by <a href="/profiles/{{author.id}}">{{author.name}}</a>
             </p>
             <p>{{cutString content "200"}}</p>
-            <a class="align-self-end" href="/posts/{{id}}">Continue reading</a>
+            <div class="d-flex justify-content-between">
+                <a href="/posts/{{id}}">Continue reading</a>
+                <span class="text-muted fs-6">Comments ({{getArrayLength comments}})</span>
+            </div>
         </article>
         {{/each}}
     </div>
