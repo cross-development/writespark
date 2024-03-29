@@ -4,7 +4,9 @@
 
         <p class="lead my-3">{{cutString posts.top.content "120"}}</p>
 
-        <p class="lead mb-0"><a href="/posts/{{posts.top.id}}" class="text-white fw-bold">Continue reading</a></p>
+        <p class="lead mb-0">
+            <a href="/posts/{{posts.top.id}}" class="text-white fw-bold fs-6">Continue reading</a>
+        </p>
     </div>
 </div>
 
@@ -20,9 +22,9 @@
                 <p class="card-text mb-auto">{{cutString content "90"}}</p>
 
                 <div class="d-flex justify-content-between">
-                    <a href="/posts/{{id}}">Continue reading</a>
+                    <a href="/posts/{{id}}" style="font-size: 12px;">Continue reading</a>
 
-                    <span class="text-muted fs-6">Comments ({{getArrayLength comments}})</span>
+                    <span class="text-muted" style="font-size: 12px;">Comments ({{getArrayLength comments}})</span>
                 </div>
             </div>
 
@@ -53,9 +55,9 @@
             <p>{{cutString content "200"}}</p>
 
             <div class="d-flex justify-content-between">
-                <a href="/posts/{{id}}">Continue reading</a>
+                <a href="/posts/{{id}}" style="font-size: 12px;">Continue reading</a>
 
-                <span class="text-muted fs-6">Comments ({{getArrayLength comments}})</span>
+                <span class="text-muted" style="font-size: 12px;">Comments ({{getArrayLength comments}})</span>
             </div>
         </article>
         {{/each}}
@@ -66,7 +68,7 @@
             <div class="p-4 mb-3 bg-light rounded">
                 <h4 class="fst-italic">About</h4>
 
-                <p class="mb-0">At Binary Bits, we're passionate about demystifying the ever-evolving world of
+                <p class="mb-0">At Writespark, we're passionate about demystifying the ever-evolving world of
                     technology. We strive to deliver informative and engaging articles that break down complex concepts
                     into easy-to-understand pieces.</p>
             </div>

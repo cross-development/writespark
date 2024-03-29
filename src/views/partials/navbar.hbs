@@ -4,19 +4,28 @@
             Writespark 💫
         </a>
 
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/" class="nav-link px-2 link-light">Feed</a></li>
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 gap-4">
+            <li>
+                <a href="/" class="nav-link px-2 link-light">Feed</a>
+            </li>
 
             {{#if isAuth}}
-            <li><a href="/my-posts" class="nav-link px-2 link-light">My posts</a></li>
+            <li>
+                <a href="/posts" class="nav-link px-2 link-light">My posts</a>
+            </li>
             {{/if}}
         </ul>
 
         <div class="col-md-3 text-end">
             {{#if isAuth}}
-            <a class="btn btn-outline-light btn-sm" href="/auth/logout">Logout</a>
+            <div class="d-flex gap-4 justify-content-end">
+                {{> avatar authorId=user.id authorName=user.email}}
+
+                <a class="btn btn-outline-light btn-sm" href="/auth/logout">Logout</a>
+            </div>
             {{else}}
             <a class="btn btn-outline-light me-2 btn-sm" href="/auth/login">Login</a>
+
             <a class="btn btn-light btn-sm" href="/auth/register">Register</a>
             {{/if}}
         </div>

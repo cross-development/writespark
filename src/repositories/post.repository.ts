@@ -67,7 +67,9 @@ export class PostRepository implements IPostRepository {
 	 * @returns A new post
 	 */
 	public create(data: Post): Promise<PostModel> {
-		return this.prismaService.client.postModel.create({ data });
+		const { title, content, authorId } = data;
+
+		return this.prismaService.client.postModel.create({ data: { title, content, authorId } });
 	}
 
 	/**

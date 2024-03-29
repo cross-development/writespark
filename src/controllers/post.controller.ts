@@ -45,12 +45,25 @@ export class PostController extends BaseController implements IPostController {
 			{
 				path: '/',
 				method: 'get',
-				handler: this.getPosts,
+				handler: this.renderAllPosts,
+				middleware: [new AuthGuard()],
+			},
+			{
+				path: '/create',
+				method: 'get',
+				handler: this.renderCreatePost,
+				middleware: [new AuthGuard()],
+			},
+			{
+				path: '/create',
+				method: 'post',
+				handler: this.createPost,
+				middleware: [new AuthGuard(), new ValidateMiddleware(CreatePostDto)],
 			},
 			{
 				path: '/:id',
 				method: 'get',
-				handler: this.getPostById,
+				handler: this.renderOnePost,
 				middleware: [new ValidateMiddleware(RequestParamsDto, 'params')],
 			},
 			{
@@ -64,64 +77,62 @@ export class PostController extends BaseController implements IPostController {
 				],
 			},
 			{
-				path: '/',
-				method: 'post',
-				handler: this.createPost,
-				middleware: [new ValidateMiddleware(CreatePostDto)],
-			},
-			{
 				path: '/:id',
 				method: 'delete',
 				handler: this.deletePost,
-				middleware: [new ValidateMiddleware(RequestParamsDto, 'params')],
+				middleware: [new AuthGuard(), new ValidateMiddleware(RequestParamsDto, 'params')],
 			},
 		]);
 	}
 
 	/**
-	 * Method is used to get the list of posts
+	 * Method is used to render a posts view
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
 	 */
-	public async getPosts(req: TRequest, res: Response): Promise<void> {
-		const posts = await this.postService.getPosts();
+	public async renderAllPosts(req: TRequest, res: Response): Promise<void> {
+		const posts = await this.postService.getPosts(req.user.id);
 
-		this.ok(res, posts);
+		return res.render('posts/index', { posts });
 	}
 
 	/**
-	 * Method is used to get a post by its id
+	 * Method is used to render one post view
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
-	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
-	public async getPostById(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
+	public async renderOnePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
 		const post = await this.postService.getPostById(Number(req.params.id));
 
 		if (!post) {
 			return res.status(StatusCode.NotFound).render('404');
 		}
 
-		return res.render('post', { post });
+		return res.render('posts/post', { post });
+	}
+
+	/**
+	 * Method is used to render a create post view
+	 * @param req - The express request
+	 * @param res - The express response
+	 */
+	public async renderCreatePost(req: TRequest, res: Response): Promise<void> {
+		return res.render('posts/create');
 	}
 
 	/**
 	 * Method is used to create a new post
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
-	 * @returns - If there is a post for the provided title, the business exception is returned
 	 */
-	public async createPost(req: TRequestWithBody<CreatePostDto>, res: Response, next: NextFunction): Promise<void> {
-		const newPost = await this.postService.createPost(req.user.id, req.body);
+	public async createPost(req: TRequestWithBody<CreatePostDto>, res: Response): Promise<void> {
+		const post = await this.postService.createPost(req.user.id, req.body);
 
-		if (!newPost) {
-			return next(new BusinessException(StatusCode.Conflict, 'Post already exists', '[PostController]'));
+		if (!post) {
+			return res.status(StatusCode.BadRequest).redirect('404');
 		}
 
-		this.created(res, newPost);
+		return res.redirect('/posts');
 	}
 
 	/**
@@ -145,20 +156,17 @@ export class PostController extends BaseController implements IPostController {
 	 * Method is used to create a new comment
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
 	 */
 	public async createComment(req: TRequestWithParamsAndBody<RequestParamsDto, CreateCommentDto>, res: Response): Promise<void> {
 		const authorId = req.user.id;
 		const postId = Number(req.params.id);
 
-		const newComment = await this.commentService.createComment(authorId, postId, req.body);
+		const comment = await this.commentService.createComment(authorId, postId, req.body);
 
-		if (!newComment) {
+		if (!comment) {
 			return res.status(StatusCode.BadRequest).redirect('404');
 		}
 
-		const post = await this.postService.getPostById(postId);
-
-		return res.render('post', { post });
+		return res.redirect(`/posts/${comment.postId}`);
 	}
 }
