@@ -17,7 +17,7 @@
             <div class="col-8">
                 <h5 class="mb-3">Comments:</h5>
 
-                {{#if isAuth}}
+                {{#if user.isAuthenticated}}
                 <form method="post" class="d-flex flex-column mb-3">
                     <textarea name="body" rows="4" class="mb-2 p-2 rounded" style="resize: none;"></textarea>
 

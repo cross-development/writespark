@@ -15,7 +15,7 @@ export class VarsMiddleware implements IMiddleware {
 	 */
 	public execute(req: Request, res: Response, next: NextFunction): void {
 		if (req.user) {
-			res.locals.isAuth = req.user.isAuthentication;
+			res.locals.user = req.user;
 		}
 
 		next();

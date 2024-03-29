@@ -9,7 +9,7 @@
                 <a href="/" class="nav-link px-2 link-light">Feed</a>
             </li>
 
-            {{#if isAuth}}
+            {{#if user.isAuthenticated}}
             <li>
                 <a href="/posts" class="nav-link px-2 link-light">My posts</a>
             </li>
@@ -17,7 +17,7 @@
         </ul>
 
         <div class="col-md-3 text-end">
-            {{#if isAuth}}
+            {{#if user.isAuthenticated}}
             <div class="d-flex gap-4 justify-content-end">
                 {{> avatar authorId=user.id authorName=user.email}}
 

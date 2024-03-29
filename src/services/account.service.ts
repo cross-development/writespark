@@ -72,13 +72,4 @@ export class AccountService implements IAccountService {
 
 		return existingUser;
 	}
-
-	/**
-	 * Method is used to get a user profile by their email
-	 * @param email - A user email
-	 * @returns A user or null if the user doesn't exist
-	 */
-	public async getProfile(email: string): Promise<UserModel | null> {
-		return this.accountRepository.find(email);
-	}
 }

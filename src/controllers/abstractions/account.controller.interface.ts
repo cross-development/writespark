@@ -7,7 +7,6 @@ import { RegisterDto } from '../../dto/register.dto';
 import { TRequestWithBody } from './route.interface';
 
 export interface IAccountController {
-	getProfile(req: Request, res: Response, next: NextFunction): Promise<void>;
 	renderLogin(req: Request, res: Response, next: NextFunction): Promise<void>;
 	login(req: TRequestWithBody<LoginDto>, res: Response, next: NextFunction): Promise<void>;
 	renderRegister(req: Request, res: Response, next: NextFunction): Promise<void>;

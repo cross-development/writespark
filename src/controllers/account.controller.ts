@@ -7,13 +7,9 @@ import { BaseController } from './abstractions/base.controller';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 // Middleware
-import { AuthGuard } from '../middleware/auth.guard';
 import { ValidateMiddleware } from '../middleware/validate.middleware';
-// Exceptions
-import { BusinessException } from '../exceptions/business-exception';
 // Constants
 import { TYPES } from '../constants/types';
-import { StatusCode } from '../constants/status-code.enum';
 // Types
 import { TRequestWithBody } from './abstractions/route.interface';
 import { IAccountController } from './abstractions/account.controller.interface';
@@ -42,12 +38,6 @@ export class AccountController extends BaseController implements IAccountControl
 	private registerRoutes(): void {
 		this.bindRoutes([
 			{
-				path: '/profile',
-				method: 'get',
-				handler: this.getProfile,
-				middleware: [new AuthGuard()],
-			},
-			{
 				path: '/login',
 				method: 'get',
 				handler: this.renderLogin,
@@ -75,25 +65,6 @@ export class AccountController extends BaseController implements IAccountControl
 				handler: this.logout,
 			},
 		]);
-	}
-
-	/**
-	 * Method is used to get a user profile
-	 * @param req - The express request
-	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
-	 * @returns - If there is no user for the provided email, the business exception is returned
-	 */
-	public async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const profile = await this.accountService.getProfile(req.user?.email);
-
-		if (!profile) {
-			return next(new BusinessException(StatusCode.NotFound, 'User not found', '[AccountController]'));
-		}
-
-		const { password: _, ...restProfile } = profile;
-
-		this.ok(res, restProfile);
 	}
 
 	/**
