@@ -5,17 +5,17 @@ import { BaseController } from './abstractions/base.controller';
 // Constants
 import { TYPES } from '../constants/types';
 // Types
-import { ICommentController } from './abstractions/comment.controller.interface';
+import { IUserController } from './abstractions/user.controller.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
-import { ICommentService } from '../services/abstractions/comment.service.interface';
+import { IUserService } from '../services/abstractions/user.service.interface';
 
 /**
- * A comment controller is used to perform CRUD operations with comments
+ * A user controller is used to perform CRUD operations with users
  */
 @injectable()
-export class CommentController extends BaseController implements ICommentController {
+export class UserController extends BaseController implements IUserController {
 	constructor(
-		@inject(TYPES.ICommentService) private readonly postService: ICommentService,
+		@inject(TYPES.IUserService) private readonly userService: IUserService,
 		@inject(TYPES.ILoggerService) private readonly loggerService: ILoggerService,
 	) {
 		super(loggerService);

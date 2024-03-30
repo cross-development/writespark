@@ -12,7 +12,7 @@ import * as hbs from 'express-handlebars';
 // Controllers
 import { HomeController } from './controllers/home.controller';
 import { PostController } from './controllers/post.controller';
-import { CommentController } from './controllers/comment.controller';
+import { UserController } from './controllers/user.controller';
 import { AccountController } from './controllers/account.controller';
 // Middleware
 import { AuthMiddleware } from './middleware/auth.middleware';
@@ -45,7 +45,7 @@ export class App {
 		@inject(TYPES.IAccountController) private readonly accountController: AccountController,
 		@inject(TYPES.IHomeController) private readonly homeController: HomeController,
 		@inject(TYPES.IPostController) private readonly postController: PostController,
-		@inject(TYPES.ICommentController) private readonly commentController: CommentController,
+		@inject(TYPES.IUserController) private readonly userController: UserController,
 	) {
 		this.app = express();
 		this.serverConfig = this.configService.get<TServerConfig>('server');
@@ -109,7 +109,7 @@ export class App {
 	private useRoutes(): void {
 		this.app.use('/auth', this.accountController.router);
 		this.app.use('/posts', this.postController.router);
-		this.app.use('/comments', this.commentController.router);
+		this.app.use('/users', this.userController.router);
 		this.app.use('/', this.homeController.router);
 	}
 

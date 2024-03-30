@@ -18,6 +18,10 @@ export const TYPES = {
 	IPostService: Symbol.for('PostService'),
 	IPostController: Symbol.for('PostController'),
 	IPostRepository: Symbol.for('PostRepository'),
+	// User domain
+	IUserService: Symbol.for('UserService'),
+	IUserController: Symbol.for('UserController'),
+	IUserRepository: Symbol.for('UserRepository'),
 	// Comment domain
 	ICommentService: Symbol.for('CommentService'),
 	ICommentController: Symbol.for('CommentController'),
