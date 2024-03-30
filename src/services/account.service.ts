@@ -10,7 +10,7 @@ import { RegisterDto } from '../dto/register.dto';
 // Constants
 import { TYPES } from '../constants/types';
 // Types
-import { TServerConfig } from '../types/app.config.interface';
+import { TServerConfig } from '../types/app.config.types';
 import { IConfigService } from './abstractions/config.service.interface';
 import { IAccountService } from './abstractions/account.service.interface';
 import { IAccountRepository } from '../repositories/abstractions/account.repository.interface';

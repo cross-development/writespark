@@ -1,6 +1,10 @@
 <div style="row">
-    <div class="col-8 mx-auto mb-5 mt-4">
-        <div class="d-flex justify-content-between align-items-center">
+    <div lass="col-8 mx-auto">
+        <h1 class="h1 mb-0 text-center mt-4 mb-4">My Posts</h1>
+    </div>
+
+    <div class="col-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-5">
             <p class="mb-0">Number of posts: <strong>{{getArrayLength posts}}</strong></p>
 
             <a href="/posts/create" class="btn btn-secondary d-flex">
@@ -20,7 +24,7 @@
 
         {{#each posts}}
         <article class="pt-2 pb-4 mb-3 border-bottom">
-            <h3 class="h3 mb-3">{{title}}</h3>
+            <h3 class="h3 mb-3">{{cutString title "40"}}</h3>
 
             <p class="text-muted" style="font-size: 12px;">{{dateFormat createdAt "MMMM dd, yyyy"}}</p>
 

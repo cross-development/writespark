@@ -30,7 +30,7 @@ import { ExceptionFilter } from './exceptions/exception.filter';
 // Constants
 import { TYPES } from './constants/types';
 // Types
-import { IBootstrapReturn } from './types/app.interface';
+import { IBootstrapReturn } from './types/app.types';
 import { IConfigService } from './services/abstractions/config.service.interface';
 import { ILoggerService } from './services/abstractions/logger.service.interface';
 import { IExceptionFilter } from './exceptions/abstractions/exception.filter.interface';

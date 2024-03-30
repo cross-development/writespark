@@ -9,6 +9,10 @@
                 <a href="/" class="nav-link px-2 link-light">Feed</a>
             </li>
 
+            <li>
+                <a href="/users" class="nav-link px-2 link-light">Authors</a>
+            </li>
+
             {{#if user.isAuthenticated}}
             <li>
                 <a href="/posts" class="nav-link px-2 link-light">My posts</a>
@@ -18,10 +22,12 @@
 
         <div class="col-md-3 text-end">
             {{#if user.isAuthenticated}}
-            <div class="d-flex gap-4 justify-content-end">
+            <div class="d-flex gap-5 justify-content-end">
                 {{> avatar authorId=user.id authorName=user.email}}
 
-                <a class="btn btn-outline-light btn-sm" href="/auth/logout">Logout</a>
+                <a class="btn btn-link btn-sm p-0 d-flex text-decoration-none text-white" href="/auth/logout">
+                    <i class="bi bi-box-arrow-right d-flex" style="font-size: 24px"></i>
+                </a>
             </div>
             {{else}}
             <a class="btn btn-outline-light me-2 btn-sm" href="/auth/login">Login</a>

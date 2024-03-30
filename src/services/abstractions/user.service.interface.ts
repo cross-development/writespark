@@ -1,6 +1,8 @@
-// Persistance
-import { UserModel } from '@prisma/client';
+// Types
+import { TUserModelWithScore, TUserModelWithPostsAndComments } from '../../types/user.types';
 
 export interface IUserService {
-	getUserProfile(id: number): Promise<UserModel | null>;
+	getUsers(): Promise<TUserModelWithPostsAndComments[]>;
+	getUserById(id: number): Promise<TUserModelWithPostsAndComments | null>;
+	getTopUsers(): Promise<TUserModelWithScore[]>;
 }

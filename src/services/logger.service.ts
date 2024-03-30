@@ -4,7 +4,7 @@ import colors from 'colors/safe';
 // Constants
 import { TYPES } from '../constants/types';
 // Types
-import { TLoggerConfig } from '../types/app.config.interface';
+import { TLoggerConfig } from '../types/app.config.types';
 import { ILoggerService } from './abstractions/logger.service.interface';
 import { IConfigService } from './abstractions/config.service.interface';
 

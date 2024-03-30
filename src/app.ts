@@ -24,7 +24,7 @@ import { TYPES } from './constants/types';
 // Utils
 import { hbsHelpers } from './utils/hbs.helpers';
 // Types
-import { TServerConfig } from './types/app.config.interface';
+import { TServerConfig } from './types/app.config.types';
 import { ILoggerService } from './services/abstractions/logger.service.interface';
 import { IConfigService } from './services/abstractions/config.service.interface';
 import { IExceptionFilter } from './exceptions/abstractions/exception.filter.interface';

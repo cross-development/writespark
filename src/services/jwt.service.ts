@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 // Constants
 import { TYPES } from '../constants/types';
 // Types
-import { TServerConfig } from '../types/app.config.interface';
+import { TServerConfig } from '../types/app.config.types';
 import { IJwtService, TJwtPayload } from './abstractions/jwt.service.interface';
 import { IConfigService } from './abstractions/config.service.interface';
 

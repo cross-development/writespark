@@ -1,6 +1,7 @@
-// Persistence
-import { UserModel } from '@prisma/client';
+// Types
+import { TUserModelWithPostsAndComments } from '../../types/user.types';
 
 export interface IUserRepository {
-	getOne(id: number): Promise<UserModel | null>;
+	getAll(): Promise<TUserModelWithPostsAndComments[]>;
+	getOne(id: number): Promise<TUserModelWithPostsAndComments | null>;
 }

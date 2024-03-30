@@ -9,6 +9,7 @@ import { TYPES } from '../constants/types';
 import { IHomeController } from './abstractions/home.controller.interface';
 import { IPostService } from '../services/abstractions/post.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
+import { IUserService } from '../services/abstractions/user.service.interface';
 
 /**
  * A home controller is used to perform some CRUD operations and render its views
@@ -17,6 +18,7 @@ import { ILoggerService } from '../services/abstractions/logger.service.interfac
 export class HomeController extends BaseController implements IHomeController {
 	constructor(
 		@inject(TYPES.IPostService) private readonly postService: IPostService,
+		@inject(TYPES.IUserService) private readonly userService: IUserService,
 		@inject(TYPES.ILoggerService) private readonly loggerService: ILoggerService,
 	) {
 		super(loggerService);
@@ -47,12 +49,14 @@ export class HomeController extends BaseController implements IHomeController {
 	public async renderFeed(req: Request, res: Response<any, Record<string, any>>, next: NextFunction): Promise<void> {
 		const posts = await this.postService.getPosts();
 
+		const topUsers = await this.userService.getTopUsers();
+
 		const postsByCategories = {
 			top: posts[0],
 			trending: posts.slice(1, 3),
 			latest: posts.slice(3),
 		};
 
-		return res.render('index', { posts: postsByCategories });
+		return res.render('index', { posts: postsByCategories, topUsers });
 	}
 }

@@ -1,0 +1,24 @@
+<div style="row">
+    <div lass="col-8 mx-auto">
+        <h1 class="h1 mb-0 text-center mb-5 mt-4">Authors</h1>
+    </div>
+
+    <div class="col-8 mx-auto mb-5 mt-4">
+        {{#each users}}
+        <div class="py-2 mb-3 border-bottom row">
+            <div class="d-flex flex-column col">
+                {{> avatar authorId=id authorName=name}}
+
+                <p class="text-muted mb-0 mt-1" style="margin-left: 32px">{{email}}</p>
+            </div>
+
+
+            <div class="col-3 d-flex flex-column justify-content-between">
+                <p class="mb-1 fs-6">Posts: {{getArrayLength posts}}</p>
+
+                <p class="mb-0 fs-6">Comments: {{getArrayLength comments}}</p>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
