@@ -10,8 +10,9 @@ import { TRequestWithBody, TRequestWithParams, TRequest, TRequestWithParamsAndBo
 export interface IPostController {
 	renderAllPosts(req: TRequest, res: Response): Promise<void>;
 	renderCreatePost(req: TRequest, res: Response): Promise<void>;
-	createPost(req: TRequestWithBody<CreatePostDto>, res: Response): Promise<void>;
 	renderOnePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void>;
+	renderDeletePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void>;
+	createPost(req: TRequestWithBody<CreatePostDto>, res: Response): Promise<void>;
 	createComment(req: TRequestWithParamsAndBody<RequestParamsDto, CreateCommentDto>, res: Response): Promise<void>;
 	deletePost(req: TRequestWithParams<RequestParamsDto>, res: Response, next: NextFunction): Promise<void>;
 }

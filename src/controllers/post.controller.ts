@@ -1,13 +1,11 @@
 // Packages
 import { inject, injectable } from 'inversify';
-import { Response, NextFunction } from 'express';
+import { Response } from 'express';
 // Controllers
 import { BaseController } from './abstractions/base.controller';
 // Middleware
 import { AuthGuard } from '../middleware/auth.guard';
 import { ValidateMiddleware } from '../middleware/validate.middleware';
-// Exceptions
-import { BusinessException } from '../exceptions/business-exception';
 // Dto
 import { CreatePostDto } from '../dto/create-post.dto';
 import { RequestParamsDto } from '../dto/request-params.dto';
@@ -77,8 +75,14 @@ export class PostController extends BaseController implements IPostController {
 				],
 			},
 			{
-				path: '/:id',
-				method: 'delete',
+				path: '/:id/delete',
+				method: 'get',
+				handler: this.renderDeletePost,
+				middleware: [new AuthGuard(), new ValidateMiddleware(RequestParamsDto, 'params')],
+			},
+			{
+				path: '/:id/delete',
+				method: 'post',
 				handler: this.deletePost,
 				middleware: [new AuthGuard(), new ValidateMiddleware(RequestParamsDto, 'params')],
 			},
@@ -136,20 +140,27 @@ export class PostController extends BaseController implements IPostController {
 	}
 
 	/**
+	 * Method is used to render a create post view
+	 * @param req - The express request
+	 * @param res - The express response
+	 */
+	public async renderDeletePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
+		return res.render(`posts/delete`);
+	}
+
+	/**
 	 * Method is used to delete a post by its id
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
-	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
-	public async deletePost(req: TRequestWithParams<RequestParamsDto>, res: Response, next: NextFunction): Promise<void> {
+	public async deletePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
 		const deletedPost = await this.postService.deletePost(Number(req.params.id));
 
 		if (!deletedPost) {
-			return next(new BusinessException(StatusCode.NotFound, 'Post not found', '[PostController]'));
+			return res.status(StatusCode.BadRequest).redirect('404');
 		}
 
-		this.ok(res, { id: deletedPost.id });
+		return res.redirect('/posts');
 	}
 
 	/**

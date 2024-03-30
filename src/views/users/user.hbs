@@ -19,22 +19,32 @@
             </div>
         </div>
     </div>
-</div>
 
-<div>
-    {{#each posts}}
-    <article class="pt-2 pb-4 mb-3 border-bottom">
-        <h3 class="h3 mb-3">{{title}}</h3>
+    <div class="col-8 mx-auto">
+        {{#each posts}}
+        <article class="pt-2 pb-4 mb-3 border-bottom">
+            <div class="d-flex align-items-start justify-content-between">
+                <h3 class="h3 mb-3">{{title}}</h3>
 
-        <p class="text-muted" style="font-size: 12px;">{{dateFormat createdAt "MMMM dd, yyyy"}}</p>
+                {{#if @root.user.isAuthenticated}}
+                {{#ifEqual authorId @root.user.id}}
+                <a href="/posts/{{id}}/delete" class="btn btn-danger p-1 ms-3">
+                    <i class="bi bi-trash-fill d-flex"></i>
+                </a>
+                {{/ifEqual}}
+                {{/if}}
+            </div>
 
-        <p class="mb-4">{{cutString content "300"}}</p>
+            <p class="text-muted" style="font-size: 12px;">{{dateFormat createdAt "MMMM dd, yyyy"}}</p>
 
-        <div class="d-flex justify-content-between">
-            <a href="/posts/{{id}}" style="font-size: 12px;">Continue reading</a>
+            <p class="mb-4">{{cutString content "300"}}</p>
 
-            <span class="text-muted" style="font-size: 12px;">Comments ({{getArrayLength comments}})</span>
-        </div>
-    </article>
-    {{/each}}
+            <div class="d-flex justify-content-between">
+                <a href="/posts/{{id}}" style="font-size: 12px;">Continue reading</a>
+
+                <span class="text-muted" style="font-size: 12px;">Comments ({{getArrayLength comments}})</span>
+            </div>
+        </article>
+        {{/each}}
+    </div>
 </div>
