@@ -1,0 +1,51 @@
+<div style="row">
+    <div lass="col-8 mx-auto">
+        <h1 class="h1 mb-0 text-center mt-4 mb-4">My Posts</h1>
+    </div>
+
+    <div class="col-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <p class="mb-0">Number of posts: <strong>{{getArrayLength posts}}</strong></p>
+
+            <a href="/posts/create" class="btn btn-secondary d-flex">
+                <i class="bi bi-plus me-1"></i>
+                Create new post
+            </a>
+        </div>
+    </div>
+
+    <div class="col-8 mx-auto">
+        {{#unless posts}}
+        <div class="d-flex pb-5 justify-content-center flex-column align-items-center" style="padding-top: 20%;">
+            <i class="bi bi-file-earmark-excel text-muted" style="font-size: 62px;"></i>
+            <h1 class="h2 text-muted">You don't have any posts yet</h1>
+        </div>
+        {{/unless}}
+
+        {{#each posts}}
+        <article class="pt-2 pb-4 mb-3 border-bottom">
+            <div class="d-flex align-items-start justify-content-between">
+                <h3 class="h3 mb-3">{{title}}</h3>
+
+                {{#if @root.user.isAuthenticated}}
+                {{#ifEqual authorId @root.user.id}}
+                <a href="/posts/{{id}}/delete" class="btn btn-danger p-1 ms-3">
+                    <i class="bi bi-trash-fill d-flex"></i>
+                </a>
+                {{/ifEqual}}
+                {{/if}}
+            </div>
+
+            <p class="text-muted" style="font-size: 12px;">{{dateFormat createdAt "MMMM dd, yyyy"}}</p>
+
+            <p class="mb-4">{{cutString content "300"}}</p>
+
+            <div class="d-flex justify-content-between">
+                <a href="/posts/{{id}}" style="font-size: 12px;">Continue reading</a>
+
+                <span class="text-muted" style="font-size: 12px;">Comments ({{getArrayLength comments}})</span>
+            </div>
+        </article>
+        {{/each}}
+    </div>
+</div>

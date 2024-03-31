@@ -1,0 +1,39 @@
+<header class="navbar fixed-top navbar-dark bg-dark">
+    <div class="container">
+        <a href="/" class="navbar-brand h2 d-flex align-items-center col-md-3 mb-0 text-light text-decoration-none">
+            Writespark 💫
+        </a>
+
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 gap-4">
+            <li>
+                <a href="/" class="nav-link px-2 link-light">Feed</a>
+            </li>
+
+            <li>
+                <a href="/users" class="nav-link px-2 link-light">Authors</a>
+            </li>
+
+            {{#if user.isAuthenticated}}
+            <li>
+                <a href="/posts" class="nav-link px-2 link-light">My posts</a>
+            </li>
+            {{/if}}
+        </ul>
+
+        <div class="col-md-3 text-end">
+            {{#if user.isAuthenticated}}
+            <div class="d-flex gap-5 justify-content-end">
+                {{> avatar authorId=user.id authorName=user.email}}
+
+                <a class="btn btn-link btn-sm p-0 d-flex text-decoration-none text-white" href="/auth/logout">
+                    <i class="bi bi-box-arrow-right d-flex" style="font-size: 24px"></i>
+                </a>
+            </div>
+            {{else}}
+            <a class="btn btn-outline-light me-2 btn-sm" href="/auth/login">Login</a>
+
+            <a class="btn btn-light btn-sm" href="/auth/register">Register</a>
+            {{/if}}
+        </div>
+    </div>
+</header>
