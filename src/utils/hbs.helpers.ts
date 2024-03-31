@@ -36,9 +36,10 @@ export const hbsHelpers = {
 	 * @returns - A trimmed string
 	 */
 	cutString(text: string, length: string): string {
-		const ending = text.length <= +length ? '' : '...';
+		const desiredLength = Number(length || 0);
+		const ending = text?.length || 0 <= desiredLength ? '' : '...';
 
-		return text.slice(0, +length) + ending;
+		return text.slice(0, desiredLength) + ending;
 	},
 
 	/**
@@ -47,6 +48,6 @@ export const hbsHelpers = {
 	 * @returns The number of all elements in the array
 	 */
 	getArrayLength(array: unknown[]): number {
-		return array?.length;
+		return array?.length || 0;
 	},
 };

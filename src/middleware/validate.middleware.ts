@@ -46,7 +46,7 @@ export class ValidateMiddleware implements IMiddleware {
 		const instance = plainToClass(this.classToValidate, req[this.requestPart]);
 
 		validate(instance).then((errors: ValidationError[]) => {
-			if (errors.length > 0) {
+			if (errors?.length > 0) {
 				const formattedErrors = this.formatValidationErrors(errors);
 
 				res.status(StatusCode.BadRequest).json({ errors: formattedErrors });

@@ -46,11 +46,11 @@ export class UserService implements IUserService {
 		const users = await this.userRepository.getAll();
 
 		const userWithScores = users
-			.map(({ id, name, email, posts, comments }) => ({
+			.map(({ id, name, email, posts = [], comments = [] }) => ({
 				id,
 				name,
 				email,
-				score: Math.round(posts.length * 0.8 + comments.length * 0.2),
+				score: Math.round(posts?.length * 0.8 + comments?.length * 0.2),
 			}))
 			.sort((a, b) => b.score - a.score);
 
