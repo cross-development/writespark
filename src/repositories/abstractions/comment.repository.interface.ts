@@ -1,8 +1,8 @@
-// Persistence
-import { CommentModel } from '@prisma/client';
 // Domain
 import { Comment } from '../../domain/comment';
+// Types
+import { TCommentModel } from '../../types/comment.types';
 
 export interface ICommentRepository {
-	create(data: Comment): Promise<CommentModel>;
+	create(data: Comment): Promise<TCommentModel>;
 }

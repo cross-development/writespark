@@ -1,6 +1,5 @@
 // Packages
 import { inject, injectable } from 'inversify';
-import { Response } from 'express';
 // Controllers
 import { BaseController } from './abstractions/base.controller';
 // Middleware
@@ -18,7 +17,7 @@ import { IPostController } from './abstractions/post.controller.interface';
 import { IPostService } from '../services/abstractions/post.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
 import { ICommentService } from '../services/abstractions/comment.service.interface';
-import { TRequestWithBody, TRequestWithParams, TRequest, TRequestWithParamsAndBody } from './abstractions/route.interface';
+import { TRequestWithBody, TRequestWithParams, TRequest, TResponse, TRequestWithParamsAndBody } from './abstractions/route.interface';
 
 /**
  * A post controller is used to perform CRUD operations with posts and render its views
@@ -68,11 +67,7 @@ export class PostController extends BaseController implements IPostController {
 				path: '/:id',
 				method: 'post',
 				handler: this.createComment,
-				middleware: [
-					new AuthGuard(),
-					new ValidateMiddleware(RequestParamsDto, 'params'),
-					new ValidateMiddleware(CreateCommentDto),
-				],
+				middleware: [new AuthGuard(), new ValidateMiddleware(RequestParamsDto, 'params'), new ValidateMiddleware(CreateCommentDto)],
 			},
 			{
 				path: '/:id/delete',
@@ -94,7 +89,7 @@ export class PostController extends BaseController implements IPostController {
 	 * @param req - The express request
 	 * @param res - The express response
 	 */
-	public async renderAllPosts(req: TRequest, res: Response): Promise<void> {
+	public async renderAllPosts(req: TRequest, res: TResponse): Promise<void> {
 		const posts = await this.postService.getPosts(req.user.id);
 
 		return res.render('posts/index', { posts });
@@ -105,11 +100,13 @@ export class PostController extends BaseController implements IPostController {
 	 * @param req - The express request
 	 * @param res - The express response
 	 */
-	public async renderOnePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
+	public async renderOnePost(req: TRequestWithParams<RequestParamsDto>, res: TResponse): Promise<void> {
 		const post = await this.postService.getPostById(Number(req.params.id));
 
 		if (!post) {
-			return res.status(StatusCode.NotFound).render('404');
+			this.loggerService.error('[PostController: renderOnePost]', 'Post not found');
+
+			return res.status(StatusCode.NotFound).redirect('/404');
 		}
 
 		return res.render('posts/post', { post });
@@ -120,7 +117,7 @@ export class PostController extends BaseController implements IPostController {
 	 * @param req - The express request
 	 * @param res - The express response
 	 */
-	public async renderCreatePost(req: TRequest, res: Response): Promise<void> {
+	public async renderCreatePost(req: TRequest, res: TResponse): Promise<void> {
 		return res.render('posts/create');
 	}
 
@@ -129,11 +126,13 @@ export class PostController extends BaseController implements IPostController {
 	 * @param req - The express request
 	 * @param res - The express response
 	 */
-	public async createPost(req: TRequestWithBody<CreatePostDto>, res: Response): Promise<void> {
+	public async createPost(req: TRequestWithBody<CreatePostDto>, res: TResponse): Promise<void> {
 		const post = await this.postService.createPost(req.user.id, req.body);
 
 		if (!post) {
-			return res.status(StatusCode.BadRequest).redirect('404');
+			this.loggerService.error('[PostController: createPost]', 'Bad request. Post has not been created');
+
+			return res.status(StatusCode.BadRequest).redirect('/400');
 		}
 
 		return res.redirect('/posts');
@@ -144,7 +143,7 @@ export class PostController extends BaseController implements IPostController {
 	 * @param req - The express request
 	 * @param res - The express response
 	 */
-	public async renderDeletePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
+	public async renderDeletePost(req: TRequestWithParams<RequestParamsDto>, res: TResponse): Promise<void> {
 		return res.render(`posts/delete`);
 	}
 
@@ -153,11 +152,13 @@ export class PostController extends BaseController implements IPostController {
 	 * @param req - The express request
 	 * @param res - The express response
 	 */
-	public async deletePost(req: TRequestWithParams<RequestParamsDto>, res: Response): Promise<void> {
+	public async deletePost(req: TRequestWithParams<RequestParamsDto>, res: TResponse): Promise<void> {
 		const deletedPost = await this.postService.deletePost(Number(req.params.id));
 
 		if (!deletedPost) {
-			return res.status(StatusCode.BadRequest).redirect('404');
+			this.loggerService.error('[PostController: deletePost]', 'Bad request. Post has not been deleted');
+
+			return res.status(StatusCode.BadRequest).redirect('/400');
 		}
 
 		return res.redirect('/posts');
@@ -168,14 +169,16 @@ export class PostController extends BaseController implements IPostController {
 	 * @param req - The express request
 	 * @param res - The express response
 	 */
-	public async createComment(req: TRequestWithParamsAndBody<RequestParamsDto, CreateCommentDto>, res: Response): Promise<void> {
+	public async createComment(req: TRequestWithParamsAndBody<RequestParamsDto, CreateCommentDto>, res: TResponse): Promise<void> {
 		const authorId = req.user.id;
 		const postId = Number(req.params.id);
 
 		const comment = await this.commentService.createComment(authorId, postId, req.body);
 
 		if (!comment) {
-			return res.status(StatusCode.BadRequest).redirect('404');
+			this.loggerService.error('[PostController: createComment]', 'Bad request. Comment has not been created');
+
+			return res.status(StatusCode.BadRequest).redirect('/400');
 		}
 
 		return res.redirect(`/posts/${comment.postId}`);

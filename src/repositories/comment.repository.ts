@@ -1,7 +1,5 @@
 // Packages
 import { inject, injectable } from 'inversify';
-// Persistence
-import { CommentModel } from '@prisma/client';
 // Domain
 import { Comment } from '../domain/comment';
 // Services
@@ -9,6 +7,7 @@ import { PrismaService } from '../persistence/prisma.service';
 // Constants
 import { TYPES } from '../constants/types';
 // Types
+import { TCommentModel } from '../types/comment.types';
 import { ICommentRepository } from './abstractions/comment.repository.interface';
 
 /**
@@ -23,7 +22,7 @@ export class CommentRepository implements ICommentRepository {
 	 * @param data - A comment entity
 	 * @returns A new comment
 	 */
-	public create(data: Comment): Promise<CommentModel> {
+	public create(data: Comment): Promise<TCommentModel> {
 		const { authorId, postId, body } = data;
 
 		return this.prismaService.client.commentModel.create({ data: { authorId, postId, body } });

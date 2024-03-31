@@ -1,11 +1,11 @@
-// Persistence
-import { PostModel } from '@prisma/client';
 // Dto
 import { CreatePostDto } from '../../dto/create-post.dto';
+// Types
+import { TPostModel } from '../../types/post.types';
 
 export interface IPostService {
-	getPosts(authorId?: number): Promise<PostModel[]>;
-	getPostById(id: number): Promise<PostModel | null>;
-	createPost(authorId: number, dto: CreatePostDto): Promise<PostModel | null>;
-	deletePost(id: number): Promise<PostModel | null>;
+	getPosts(authorId?: number): Promise<TPostModel[]>;
+	getPostById(id: number): Promise<TPostModel | null>;
+	createPost(authorId: number, dto: CreatePostDto): Promise<TPostModel | null>;
+	deletePost(id: number): Promise<TPostModel | null>;
 }

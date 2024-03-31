@@ -7,13 +7,17 @@ import { TYPES } from '../constants/types';
 // Types
 import { IUserService } from './abstractions/user.service.interface';
 import { TUserModelWithPostsAndComments, TUserModelWithScore } from '../types/user.types';
+import { ILoggerService } from './abstractions/logger.service.interface';
 
 /**
- * User service which is used to interact with the user repository
+ * User service is used to interact with the user repository
  */
 @injectable()
 export class UserService implements IUserService {
-	constructor(@inject(TYPES.IUserRepository) private readonly userRepository: UserRepository) {}
+	constructor(
+		@inject(TYPES.ILoggerService) private readonly loggerService: ILoggerService,
+		@inject(TYPES.IUserRepository) private readonly userRepository: UserRepository,
+	) {}
 
 	/**
 	 * Method is used to get the list of users including their posts and comments
@@ -24,11 +28,13 @@ export class UserService implements IUserService {
 	}
 
 	/**
-	 * Method which is used to get a user profile
+	 * Method is used to get a user profile
 	 * @param id - A user id
 	 * @returns A user or null if the post has not been found
 	 */
 	public async getUserById(id: number): Promise<TUserModelWithPostsAndComments | null> {
+		this.loggerService.info('[UserService: getUserById]', `User with id ${id} has been requested`);
+
 		return this.userRepository.getOne(id);
 	}
 

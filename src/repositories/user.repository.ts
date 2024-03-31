@@ -27,7 +27,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	/**
-	 * Method which is used to get a user
+	 * Method is used to get a user
 	 * @param id - A user id
 	 * @returns A user or null if the user doesn't exist
 	 */

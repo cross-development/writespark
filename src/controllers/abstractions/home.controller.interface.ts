@@ -1,6 +1,8 @@
-// Packages
-import { Request, Response, NextFunction } from 'express';
+// Types
+import { TRequest, TResponse } from './route.interface';
 
 export interface IHomeController {
-	renderFeed(req: Request, res: Response, next: NextFunction): Promise<void>;
+	renderFeed(req: TRequest, res: TResponse): Promise<void>;
+	renderNotFound(req: TRequest, res: TResponse): Promise<void>;
+	renderBadRequest(req: TRequest, res: TResponse): Promise<void>;
 }

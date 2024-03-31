@@ -1,8 +1,8 @@
-// Persistance
-import { CommentModel } from '@prisma/client';
 // Dto
 import { CreateCommentDto } from '../../dto/create-comment.dto';
+// Types
+import { TCommentModel } from '../../types/comment.types';
 
 export interface ICommentService {
-	createComment(authorId: number, postId: number, dto: CreateCommentDto): Promise<CommentModel>;
+	createComment(authorId: number, postId: number, dto: CreateCommentDto): Promise<TCommentModel>;
 }

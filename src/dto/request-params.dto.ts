@@ -3,7 +3,7 @@ import { IsInt, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 /**
- * A request params DTO which is used to validate the data obtained from the request
+ * A request params DTO is used to validate the data obtained from the request params
  */
 export class RequestParamsDto {
 	@Transform(({ value }) => parseInt(value))

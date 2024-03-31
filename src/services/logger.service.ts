@@ -47,7 +47,7 @@ export class LoggerService implements ILoggerService {
 
 	/**
 	 * Method is used to log information
-	 * @param context - A context in which the logger is used
+	 * @param context - A context the logger is used in
 	 * @param args - Any arguments for logging
 	 */
 	public info(context: string, ...args: unknown[]): void {
@@ -58,7 +58,7 @@ export class LoggerService implements ILoggerService {
 
 	/**
 	 * Method is used to log warnings
-	 * @param context - A context in which the logger is used
+	 * @param context - A context the logger is used in
 	 * @param args - Any arguments for logging
 	 */
 	public warn(context: string, ...args: unknown[]): void {
@@ -69,7 +69,7 @@ export class LoggerService implements ILoggerService {
 
 	/**
 	 * Method is used to log errors
-	 * @param context - A context in which the logger is used
+	 * @param context - A context the logger is used in
 	 * @param args - Any arguments for logging
 	 */
 	public error(context: string, ...args: unknown[]): void {

@@ -1,13 +1,15 @@
 // Persistance
 import { CommentModel, PostModel, UserModel } from '@prisma/client';
 
-export type TUserModel = Omit<UserModel, 'password'>;
+export type TUserModel = UserModel;
 
-export type TUserModelWithPostsAndComments = TUserModel & {
+export type TUserModelWithoutPwd = Omit<UserModel, 'password'>;
+
+export type TUserModelWithPostsAndComments = TUserModelWithoutPwd & {
 	posts: PostModel[];
 	comments: CommentModel[];
 };
 
-export type TUserModelWithScore = TUserModel & {
+export type TUserModelWithScore = TUserModelWithoutPwd & {
 	score: number;
 };

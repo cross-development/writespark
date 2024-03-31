@@ -1,11 +1,11 @@
 // Packages
 import { inject, injectable } from 'inversify';
-import { Response, NextFunction, Request } from 'express';
 // Controllers
 import { BaseController } from './abstractions/base.controller';
 // Constants
 import { TYPES } from '../constants/types';
 // Types
+import { TRequest, TResponse } from './abstractions/route.interface';
 import { IHomeController } from './abstractions/home.controller.interface';
 import { IPostService } from '../services/abstractions/post.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
@@ -36,17 +36,25 @@ export class HomeController extends BaseController implements IHomeController {
 				method: 'get',
 				handler: this.renderFeed,
 			},
+			{
+				path: '/400',
+				method: 'get',
+				handler: this.renderBadRequest,
+			},
+			{
+				path: '/404',
+				method: 'get',
+				handler: this.renderNotFound,
+			},
 		]);
 	}
 
 	/**
-	 * Method is used to render home page (feed)
+	 * Method is used to render home view (feed)
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
-	 * @returns - If there is no post for the provided id, the business exception is returned
 	 */
-	public async renderFeed(req: Request, res: Response<any, Record<string, any>>, next: NextFunction): Promise<void> {
+	public async renderFeed(req: TRequest, res: TResponse): Promise<void> {
 		const posts = await this.postService.getPosts();
 
 		const topUsers = await this.userService.getTopUsers();
@@ -58,5 +66,23 @@ export class HomeController extends BaseController implements IHomeController {
 		};
 
 		return res.render('index', { posts: postsByCategories, topUsers });
+	}
+
+	/**
+	 * Method is used to render a bad request view
+	 * @param req - The express request
+	 * @param res - The express response
+	 */
+	public async renderBadRequest(req: TRequest, res: TResponse): Promise<void> {
+		return res.render('400');
+	}
+
+	/**
+	 * Method is used to render a not found view
+	 * @param req - The express request
+	 * @param res - The express response
+	 */
+	public async renderNotFound(req: TRequest, res: TResponse): Promise<void> {
+		return res.render('404');
 	}
 }

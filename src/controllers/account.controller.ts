@@ -1,6 +1,5 @@
 // Packages
 import { inject, injectable } from 'inversify';
-import { Request, Response, NextFunction } from 'express';
 // Controllers
 import { BaseController } from './abstractions/base.controller';
 // DTO
@@ -10,15 +9,16 @@ import { RegisterDto } from '../dto/register.dto';
 import { ValidateMiddleware } from '../middleware/validate.middleware';
 // Constants
 import { TYPES } from '../constants/types';
+import { StatusCode } from '../constants/status-code.enum';
 // Types
-import { TRequestWithBody } from './abstractions/route.interface';
+import { TRequest, TRequestWithBody, TResponse } from './abstractions/route.interface';
 import { IAccountController } from './abstractions/account.controller.interface';
 import { IAccountService } from '../services/abstractions/account.service.interface';
 import { ILoggerService } from '../services/abstractions/logger.service.interface';
 import { IJwtService } from '../services/abstractions/jwt.service.interface';
 
 /**
- * A user controller is used to perform CRUD operations with users
+ * An account controller is used to perform CRUD operations with account
  */
 @injectable()
 export class AccountController extends BaseController implements IAccountController {
@@ -71,9 +71,8 @@ export class AccountController extends BaseController implements IAccountControl
 	 * Method is used to render the login view
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
 	 */
-	public async renderLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
+	public async renderLogin(req: TRequest, res: TResponse): Promise<void> {
 		return res.render('auth/login');
 	}
 
@@ -81,14 +80,14 @@ export class AccountController extends BaseController implements IAccountControl
 	 * Method is used to login a user
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
-	 * @returns - If the user not found, the business exception is returned
 	 */
-	public async login(req: TRequestWithBody<LoginDto>, res: Response, next: NextFunction): Promise<void> {
+	public async login(req: TRequestWithBody<LoginDto>, res: TResponse): Promise<void> {
 		const existingUser = await this.accountService.validateUser(req.body);
 
 		if (!existingUser) {
-			return res.redirect('auth/login');
+			this.loggerService.error('[AccountController: login]', 'User not found');
+
+			return res.status(StatusCode.BadRequest).redirect('/auth/login');
 		}
 
 		const accessToken = this.jwtService.sign({ id: existingUser.id, email: existingUser.email });
@@ -102,9 +101,8 @@ export class AccountController extends BaseController implements IAccountControl
 	 * Method is used to render the register view
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
 	 */
-	public async renderRegister(req: Request, res: Response, next: NextFunction): Promise<void> {
+	public async renderRegister(req: TRequest, res: TResponse): Promise<void> {
 		return res.render('auth/register');
 	}
 
@@ -112,13 +110,14 @@ export class AccountController extends BaseController implements IAccountControl
 	 * Method is used to register a new user
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
 	 */
-	public async register(req: TRequestWithBody<RegisterDto>, res: Response, next: NextFunction): Promise<void> {
+	public async register(req: TRequestWithBody<RegisterDto>, res: TResponse): Promise<void> {
 		const newUser = await this.accountService.createUser(req.body);
 
 		if (!newUser) {
-			return res.redirect('auth/register');
+			this.loggerService.error('[AccountController: register]', 'User already exists');
+
+			return res.status(StatusCode.BadRequest).redirect('/auth/register');
 		}
 
 		const accessToken = this.jwtService.sign({ id: newUser.id, email: newUser.email });
@@ -132,9 +131,8 @@ export class AccountController extends BaseController implements IAccountControl
 	 * Method is used to logout user
 	 * @param req - The express request
 	 * @param res - The express response
-	 * @param next - The next function called to pass the request further
 	 */
-	public async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+	public async logout(req: TRequest, res: TResponse): Promise<void> {
 		res.clearCookie('accessToken');
 
 		return res.redirect('/');

@@ -1,23 +1,11 @@
-// Persistence
-import { PostModel } from '@prisma/client';
 // Domain
 import { Post } from '../../domain/post';
-
-export type TPostParams =
-	| {
-			id: number;
-			title?: string;
-			authorId?: number;
-	  }
-	| {
-			title: string;
-			id?: number;
-			authorId?: number;
-	  };
+// Types
+import { TPostModel, TPostParams } from '../../types/post.types';
 
 export interface IPostRepository {
-	getAll(authorId?: number): Promise<PostModel[]>;
-	getOne(params: TPostParams): Promise<PostModel | null>;
-	create(data: Post): Promise<PostModel>;
-	delete(id: number): Promise<PostModel>;
+	getAll(authorId?: number): Promise<TPostModel[]>;
+	getOne(params: TPostParams): Promise<TPostModel | null>;
+	create(data: Post): Promise<TPostModel>;
+	delete(id: number): Promise<TPostModel>;
 }

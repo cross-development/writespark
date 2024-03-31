@@ -1,6 +1,6 @@
 // Packages
 import { injectable } from 'inversify';
-import { Response, Router } from 'express';
+import { Router } from 'express';
 // Constants
 import { StatusCode } from '../../constants/status-code.enum';
 // Types
@@ -32,7 +32,7 @@ export abstract class BaseController {
 	 * @param message - A message to send to a client
 	 * @returns A result of execution of status and json methods
 	 */
-	private send<T>(res: Response, code: StatusCode, message: T): TResponse {
+	private send<T>(res: TResponse, code: StatusCode, message: T): TResponse {
 		res.type('application/json');
 
 		return res.status(code).json(message);
@@ -44,7 +44,7 @@ export abstract class BaseController {
 	 * @param message - A message to send to a client
 	 * @returns A result of execution of send method with 200 status
 	 */
-	protected ok<T>(res: Response, message: T): TResponse {
+	protected ok<T>(res: TResponse, message: T): TResponse {
 		return this.send<T>(res, StatusCode.OK, message);
 	}
 
@@ -53,7 +53,7 @@ export abstract class BaseController {
 	 * @param res - The express response
 	 * @returns A result of execution of sendStatus method with 201 status
 	 */
-	protected created<T>(res: Response, message: T): TResponse {
+	protected created<T>(res: TResponse, message: T): TResponse {
 		return this.send<T>(res, StatusCode.Created, message);
 	}
 
@@ -62,7 +62,7 @@ export abstract class BaseController {
 	 * @param res - The express response
 	 * @returns A result of execution of sendStatus method with 204 status
 	 */
-	protected noContent(res: Response): TResponse {
+	protected noContent(res: TResponse): TResponse {
 		return res.sendStatus(StatusCode.NoContent);
 	}
 

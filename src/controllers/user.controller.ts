@@ -68,7 +68,9 @@ export class UserController extends BaseController implements IUserController {
 		const user = await this.userService.getUserById(Number(req.params.id));
 
 		if (!user) {
-			return res.status(StatusCode.NotFound).render('404');
+			this.loggerService.error('[UserController: renderUserProfile]', 'Bad request. User not found');
+
+			return res.status(StatusCode.NotFound).redirect('/404');
 		}
 
 		return res.render('users/user', user);

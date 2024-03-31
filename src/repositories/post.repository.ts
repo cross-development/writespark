@@ -1,7 +1,5 @@
 // Packages
 import { inject, injectable } from 'inversify';
-// Persistence
-import { PostModel } from '@prisma/client';
 // Domain
 import { Post } from '../domain/post';
 // Services
@@ -9,7 +7,8 @@ import { PrismaService } from '../persistence/prisma.service';
 // Constants
 import { TYPES } from '../constants/types';
 // Types
-import { IPostRepository, TPostParams } from './abstractions/post.repository.interface';
+import { TPostModel, TPostParams } from '../types/post.types';
+import { IPostRepository } from './abstractions/post.repository.interface';
 
 /**
  * A post repository that interacts with a post model in the database
@@ -23,7 +22,7 @@ export class PostRepository implements IPostRepository {
 	 * @param authorId - An author id
 	 * @returns A list of all posts
 	 */
-	public getAll(authorId?: number): Promise<PostModel[]> {
+	public getAll(authorId?: number): Promise<TPostModel[]> {
 		return this.prismaService.client.postModel.findMany({
 			where: { authorId },
 			orderBy: { createdAt: 'desc' },
@@ -41,7 +40,7 @@ export class PostRepository implements IPostRepository {
 	 * @param params - A query params (some fields of the post to find by)
 	 * @returns A post or null if the post doesn't exist
 	 */
-	public getOne(params: TPostParams): Promise<PostModel | null> {
+	public getOne(params: TPostParams): Promise<TPostModel | null> {
 		return this.prismaService.client.postModel.findUnique({
 			where: params,
 			include: {
@@ -66,7 +65,7 @@ export class PostRepository implements IPostRepository {
 	 * @param data - A post entity
 	 * @returns A new post
 	 */
-	public create(data: Post): Promise<PostModel> {
+	public create(data: Post): Promise<TPostModel> {
 		const { title, content, authorId } = data;
 
 		return this.prismaService.client.postModel.create({ data: { title, content, authorId } });
@@ -77,7 +76,7 @@ export class PostRepository implements IPostRepository {
 	 * @param id - A post id
 	 * @returns A deleted post
 	 */
-	public delete(id: number): Promise<PostModel> {
+	public delete(id: number): Promise<TPostModel> {
 		return this.prismaService.client.postModel.delete({ where: { id } });
 	}
 }

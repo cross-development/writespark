@@ -1,6 +1,7 @@
 // Packages
 import { PrismaClient } from '@prisma/client';
 
+// Initializing Prisma client
 const prisma = new PrismaClient();
 
 /**
@@ -32,6 +33,22 @@ abstract class Seed {
 							title: 'Follow ExpressJS on Twitter',
 							content:
 								"Calling all ExpressJS enthusiasts! Elevate your Node.js game by following ExpressJS on Twitter. Whether you're a seasoned developer or just starting out, staying updated with the latest trends, tutorials, and best practices is crucial. From middleware tips to advanced routing techniques, there's always something new to learn and explore. Join the ExpressJS community on Twitter and be part of the conversation. Together, we'll navigate the world of web development with speed, simplicity, and style. Don't miss out – hit that follow button now! #ExpressJS #NodeJS #WebDev #Twitter",
+							comments: {
+								create: [],
+							},
+						},
+						{
+							title: "What's New in .NET 9",
+							content:
+								'.NET 9 brings a plethora of exciting updates and enhancements, revolutionizing the way we build applications. From performance optimizations to new language features, developers are in for a treat with this release. One of the most anticipated additions is the introduction of native support for Apple Silicon, enabling seamless development and deployment of .NET applications on macOS devices powered by M1 chips. Additionally, advancements in the ASP.NET Core framework promise improved scalability and reliability for web applications, empowering developers to deliver exceptional user experiences. With enhanced support for containers and cloud-native development, .NET 9 is poised to simplify the journey to modern application development. Stay tuned as we delve deeper into these exciting updates, exploring how they can elevate your projects to new heights of success. #dotNET #Programming #Innovation #ASPNETCore #AppleSilicon #WebDevelopment',
+							comments: {
+								create: [],
+							},
+						},
+						{
+							title: 'Exploring the Future of Artificial Intelligence in Healthcare',
+							content:
+								'Artificial intelligence (AI) is poised to revolutionize the healthcare industry, ushering in a new era of personalized medicine and improved patient outcomes. With AI-powered technologies, healthcare providers can analyze vast amounts of medical data to identify patterns, diagnose diseases, and recommend tailored treatment plans. From predictive analytics that forecast patient risks to image recognition algorithms that aid in medical imaging interpretation, AI is transforming every aspect of healthcare delivery. Moreover, virtual health assistants and chatbots powered by AI are enhancing patient engagement and delivering 24/7 support, revolutionizing the patient experience. As AI continues to evolve, so too will its impact on healthcare, driving efficiencies, reducing costs, and ultimately saving lives. Join us as we delve into the groundbreaking applications of AI in healthcare and explore the possibilities of a future where technology works hand-in-hand with healthcare professionals to provide better care for all. #AI #Healthcare #Innovation #PersonalizedMedicine #FutureOfWork',
 							comments: {
 								create: [],
 							},
@@ -86,6 +103,14 @@ abstract class Seed {
 										authorId: alice.id,
 									},
 								],
+							},
+						},
+						{
+							title: 'The Rise of Low-Code Development Platforms',
+							content:
+								'Low-code development platforms are revolutionizing the software development landscape, offering a streamlined approach to building applications with minimal hand-coding. With the demand for digital solutions skyrocketing across industries, low-code platforms empower businesses to accelerate their app development processes, delivering solutions to market faster than ever before. These platforms provide intuitive visual interfaces, drag-and-drop functionality, and pre-built templates, allowing both professional developers and citizen developers to create robust applications with ease. Moreover, low-code platforms facilitate collaboration between IT and business teams, fostering innovation and driving digital transformation initiatives. As organizations embrace the power of low-code development, they gain a competitive edge in rapidly evolving markets, enabling them to adapt to changing customer demands and seize new opportunities. Join the low-code revolution and unlock the potential to build transformative applications at the speed of business. #LowCode #AppDevelopment #DigitalTransformation #Innovation',
+							comments: {
+								create: [],
 							},
 						},
 					],
