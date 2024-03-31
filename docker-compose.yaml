@@ -1,9 +1,20 @@
 version: '3.8'
 
 services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - ${PORT}:3000
+    depends_on:
+      - postgres
+
   postgres:
     container_name: postgres
     image: postgres
+    restart: always
     env_file:
       - .env
     environment:
