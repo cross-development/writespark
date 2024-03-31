@@ -7,7 +7,7 @@
 	"scripts": {
 		"start": "node ./build/src/main.js",
 		"dev": "nodemon",
-		"build": "tsc",
+		"build": "tsc && cp -r src/views build/src/views",
 		"lint": "eslint ./src/**",
 		"lint:fix": "eslint ./src/** --fix",
 		"debug": "nodemon -e ts,json --exec node --inspect=localhost:9222 -r ts-node/register src/main.ts",
