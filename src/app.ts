@@ -6,7 +6,6 @@ import { injectable, inject } from 'inversify';
 import * as bodyParser from 'body-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import * as hbs from 'express-handlebars';
 // Controllers
@@ -87,7 +86,6 @@ export class App {
 	 */
 	private useMiddleware(): void {
 		this.app.use(helmet());
-		this.app.use(cors({ origin: this.serverConfig.allowedOrigin }));
 
 		this.app.use(cookieParser());
 
